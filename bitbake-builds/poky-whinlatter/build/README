@@ -1,0 +1,9 @@
+Poky - The Yocto Project testing distribution with internet sstate acceleration. Use with caution as it requires a completely robust local network with sufficient bandwidth.
+
+Additional information is in bitbake-builds/poky-whinlatter/build/conf/conf-summary.txt and bitbake-builds/poky-whinlatter/build/conf/conf-notes.txt
+
+Source the environment using '. ./init-build-env' from the project root to run builds from the command line (this will source the build's init-build-env). You can also source the build directly with '. bitbake-builds/poky-whinlatter/build/init-build-env'.
+
+Run 'bitbake-config-build enable-fragment <fragment-name>' to enable additional fragments or replace built-in ones (e.g. machine/<name> or distro/<name> to change MACHINE or DISTRO).
+
+The bitbake configuration files (local.conf, bblayers.conf and more) can be found in bitbake-builds/poky-whinlatter/build/conf

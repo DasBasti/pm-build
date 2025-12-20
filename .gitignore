@@ -1,0 +1,18 @@
+# Ignore all files and directories starting with a dot (any depth)
+**/.*
+
+# Keep important dotfiles and folders
+!.gitignore
+!.gitattributes
+!.github
+
+# Ignore any bitbake build directories and their contents anywhere in the repo
+**/build/tmp
+**/build/sstate-cache
+**/build/cache
+**/build/*.log
+
+#Ignore any buildtools downloads
+**/buildtools/sysroots
+**/buildtools-downloads/**/*.sh
+**/buildtools-downloads/**/*.sh.sha256sum

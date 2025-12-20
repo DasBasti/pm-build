@@ -1,0 +1,21 @@
+#!/usr/bin/env bash
+# Resolve script directory and project root
+SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
+PROJECT_ROOT="$SCRIPT_DIR"
+export PROJECT_ROOT
+
+# Source build environment scripts directly (no safeguards)
+if [ -f "$PROJECT_ROOT/bitbake-builds/poky-whinlatter/build/init-build-env" ]; then
+  . "$PROJECT_ROOT/bitbake-builds/poky-whinlatter/build/init-build-env"
+else
+  echo "Warning: init-build-env not found at $PROJECT_ROOT/bitbake-builds/poky-whinlatter/build/init-build-env" >&2
+fi
+
+if [ -f "$PROJECT_ROOT/bitbake-builds/poky-whinlatter/buildtools/environment-setup-x86_64-pokysdk-linux" ]; then
+  . "$PROJECT_ROOT/bitbake-builds/poky-whinlatter/buildtools/environment-setup-x86_64-pokysdk-linux"
+else
+  echo "Warning: environment-setup script not found at $PROJECT_ROOT/bitbake-builds/poky-whinlatter/buildtools/environment-setup-x86_64-pokysdk-linux" >&2
+fi
+
+PATH="$PROJECT_ROOT/meta-pm-thebrutzler/bin:$PATH"
+export PATH

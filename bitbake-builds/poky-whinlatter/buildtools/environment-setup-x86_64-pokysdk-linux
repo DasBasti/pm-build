@@ -1,0 +1,31 @@
+export PATH="/home/bastian/Projects/thebrutzler/pm-build/bitbake-builds/poky-whinlatter/buildtools/sysroots/x86_64-pokysdk-linux/usr/bin:/home/bastian/Projects/thebrutzler/pm-build/bitbake-builds/poky-whinlatter/buildtools/sysroots/x86_64-pokysdk-linux/usr/sbin:/home/bastian/Projects/thebrutzler/pm-build/bitbake-builds/poky-whinlatter/buildtools/sysroots/x86_64-pokysdk-linux/bin:/home/bastian/Projects/thebrutzler/pm-build/bitbake-builds/poky-whinlatter/buildtools/sysroots/x86_64-pokysdk-linux/sbin:$PATH"
+export OECORE_NATIVE_SYSROOT="/home/bastian/Projects/thebrutzler/pm-build/bitbake-builds/poky-whinlatter/buildtools/sysroots/x86_64-pokysdk-linux"
+HOST_PKG_PATH=$(command -p pkg-config --variable=pc_path pkg-config 2>/dev/null)
+export PKG_CONFIG_LIBDIR=/home/bastian/Projects/thebrutzler/pm-build/bitbake-builds/poky-whinlatter/buildtools/sysroots/x86_64-pokysdk-linux//usr/lib/pkgconfig:/home/bastian/Projects/thebrutzler/pm-build/bitbake-builds/poky-whinlatter/buildtools/sysroots/x86_64-pokysdk-linux//usr/share/pkgconfig:${HOST_PKG_PATH:-/usr/lib/pkgconfig:/usr/share/pkgconfig}
+# Detect host ca file/path, export for envfile to use
+# /etc/ssl/certs/ca-certificates.crt Debian systems
+# /etc/pki/tls/certs/ca-bundle.crt Fedora systems
+# /etc/ssl/ca-bundle.pem Suse systems
+export CAFILE
+export CAPATH
+for a in /etc/ssl/certs/ca-certificates.crt     /etc/pki/tls/certs/ca-bundle.crt     /etc/ssl/ca-bundle.pem ; do
+    if test -f "$a"; then
+        CAFILE="$a"
+        break
+    fi
+done
+
+a="/etc/ssl/certs"
+if test -d "$a" && ls "$a"/[0-9a-f][0-9a-f][0-9a-f][0-9a-f][0-9a-f][0-9a-f][0-9a-f][0-9a-f].0 >/dev/null 2>/dev/null; then
+    CAPATH="$a"
+fi
+
+if [ -d "$OECORE_NATIVE_SYSROOT/environment-setup.d" ]; then
+	for envfile in $OECORE_NATIVE_SYSROOT/environment-setup.d/*.sh; do
+		. $envfile
+	done
+fi
+
+# We have to unset this else it can confuse oe-selftest and other tools
+# which may also use the overlapping namespace.
+unset OECORE_NATIVE_SYSROOT CAFILE CAPATH

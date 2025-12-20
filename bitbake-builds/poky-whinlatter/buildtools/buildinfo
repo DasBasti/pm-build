@@ -1,0 +1,13 @@
+-----------------------
+Build Configuration:  |
+-----------------------
+DISTRO = poky
+DISTRO_VERSION = 5.2.3
+IMAGE_BASENAME = buildtools-extended-tarball
+IMAGE_NAME = buildtools-extended-tarball-qemux86-64.rootfs-20250815193731
+-----------------------
+Layer Revisions:      |
+-----------------------
+meta              = walnascar:db04028d9070f05c3b5dee728473fb234bd24f05
+meta-poky         = walnascar:db04028d9070f05c3b5dee728473fb234bd24f05
+meta-yocto-bsp    = walnascar:db04028d9070f05c3b5dee728473fb234bd24f05

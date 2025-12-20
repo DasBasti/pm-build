@@ -1,0 +1,96 @@
+#!/bin/bash
+
+set -euo pipefail
+IFS=$'\n\t'
+
+IMAGE_FILE="${1:-}"
+IMAGE_TARGET="${2:-}"
+
+usage() {
+  cat <<EOF
+Usage: $(basename "$0") [-y] <image-file> <device>
+
+Flash an image to a block device using bmaptool.
+
+Arguments:
+  image-file   Path to the image file to write (bmap-aware image)
+  device       Target block device (e.g. /dev/mmcblk0 or /dev/sdX)
+
+This will erase all data on the target device. Type 'yes' to confirm.
+EOF
+  exit 1
+}
+
+if [ -z "$IMAGE_FILE" ] || [ -z "$IMAGE_TARGET" ]; then
+  usage
+fi
+
+# check that the image file exists and is readable
+if [ ! -f "$IMAGE_FILE" ]; then
+  echo "Error: image file '$IMAGE_FILE' does not exist or is not a regular file." >&2
+  exit 1
+fi
+
+# check that the target exists
+if [ ! -e "$IMAGE_TARGET" ]; then
+  echo "Error: target '$IMAGE_TARGET' does not exist." >&2
+  exit 1
+fi
+
+# warn if target is not a block device
+if [ ! -b "$IMAGE_TARGET" ]; then
+  echo "Warning: target '$IMAGE_TARGET' is not a block device." >&2
+  read -r -p "Continue anyway? [y/N]: " yn
+  case "$yn" in
+    [Yy]*) ;;
+    *) echo "Aborting."; exit 1 ;;
+  esac
+fi
+
+# Unmount any mounted partitions on target
+mapfile -t MOUNTPOINTS < <(lsblk -ln -o MOUNTPOINT "${IMAGE_TARGET}" 2>/dev/null | awk 'NF')
+if [ "${#MOUNTPOINTS[@]}" -ne 0 ]; then
+  echo "Found mounted partitions on $IMAGE_TARGET, unmounting..."
+  for mp in "${MOUNTPOINTS[@]}"; do
+    echo "Unmounting $mp"
+    sudo umount "$mp" || { echo "Failed to unmount $mp" >&2; exit 1; }
+  done
+fi
+
+# Save original permissions so we can restore them later if we change them
+orig_perms=""
+if [ -e "$IMAGE_TARGET" ]; then
+  orig_perms=$(stat -c %a "$IMAGE_TARGET" 2>/dev/null || true)
+fi
+
+# Ensure write access to the target
+cleanup_chmod=0
+if [ ! -w "$IMAGE_TARGET" ]; then
+  echo "Need write access to $IMAGE_TARGET. Will run: sudo chmod a+w $IMAGE_TARGET"
+  sudo chmod a+w "$IMAGE_TARGET" || { echo "Failed to make $IMAGE_TARGET writable" >&2; exit 1; }
+  cleanup_chmod=1
+fi
+
+# Ensure the required tooling is available
+if ! command -v oe-run-native >/dev/null 2>&1; then
+  echo "Error: 'oe-run-native' not found in PATH. Make sure your build environment is set up." >&2
+  exit 1
+fi
+
+# Run bmaptool to copy the image to the device
+set -x
+oe-run-native bmaptool-native bmaptool copy "${IMAGE_FILE}" "${IMAGE_TARGET}"
+rc=$?
+set +x
+
+# Restore original permissions if we changed them
+if [ "$cleanup_chmod" -eq 1 ] && [ -n "$orig_perms" ]; then
+  sudo chmod "$orig_perms" "$IMAGE_TARGET" || echo "Warning: failed to restore permissions" >&2
+fi
+
+if [ "$rc" -ne 0 ]; then
+  echo "bmaptool failed with exit code $rc" >&2
+  exit "$rc"
+fi
+
+echo "Flash completed successfully."

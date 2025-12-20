@@ -1,0 +1,59 @@
+name: Build Yocto Image
+
+on:
+  push:
+    branches: [ main ]
+
+jobs:
+  build:
+    runs-on: [ self-hosted, Linux ]
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+        with:
+          submodules: recursive
+          fetch-depth: 0
+
+      - name: Restore buildtools cache
+        uses: actions/cache@v4
+        with:
+          path: build/buildtools-downloads
+          key: ${{ runner.os }}-buildtools-${{ hashFiles('init-build-env') }}
+          restore-keys: |
+            ${{ runner.os }}-buildtools-
+
+      - name: Restore sstate/downloads cache
+        uses: actions/cache@v4
+        with:
+          path: |
+            build/sstate-cache
+            build/downloads
+          key: ${{ runner.os }}-yocto-${{ hashFiles('init-build-env') }}
+          restore-keys: |
+            ${{ runner.os }}-yocto-
+
+      - name: Restore python venv
+        uses: syphar/restore-virtualenv@v1
+        id: cache-virtualenv
+
+      - uses: syphar/restore-pip-download-cache@v1
+        if: steps.cache-virtualenv.outputs.cache-hit != 'true'
+      
+      - run: pip install websockets
+        if: steps.cache-virtualenv.outputs.cache-hit != 'true'
+
+      - name: Install build tools
+        shell: bash -l {0}
+        run: $GITHUB_WORKSPACE/.github/scripts/install-buildtools.sh
+
+      - name: Build images
+        shell: bash -l {0}
+        run: $GITHUB_WORKSPACE/.github/scripts/build.sh
+
+      - name: Upload images artifact
+        uses: actions/upload-artifact@v6
+        with:
+          name: images
+          path: $GITHUB_WORKSPACE/bitbake-builds/poky-whinlatter/build/tmp/deploy/images/thebrutzler_v1/
+

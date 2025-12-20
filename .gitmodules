@@ -1,0 +1,23 @@
+[submodule "bitbake"]
+	path = bitbake
+	url = https://git.openembedded.org/bitbake
+[submodule "bitbake-builds/poky-whinlatter/layers/meta-rockchip"]
+	path = bitbake-builds/poky-whinlatter/layers/meta-rockchip
+	url = https://git.yoctoproject.org/meta-rockchip
+	branch = whinlatter
+[submodule "bitbake-builds/poky-whinlatter/layers/meta-arm"]
+	path = bitbake-builds/poky-whinlatter/layers/meta-arm
+	url = https://git.yoctoproject.org/meta-arm
+	branch = whinlatter
+[submodule "bitbake-builds/poky-whinlatter/layers/openembedded-core"]
+	path = bitbake-builds/poky-whinlatter/layers/openembedded-core
+	url = https://git.openembedded.org/openembedded-core
+	branch = whinlatter
+[submodule "bitbake-builds/poky-whinlatter/layers/meta-yocto"]
+	path = bitbake-builds/poky-whinlatter/layers/meta-yocto
+	url = https://git.yoctoproject.org/meta-yocto
+	branch = whinlatter
+[submodule "bitbake-builds/poky-whinlatter/layers/yocto-docs"]
+	path = bitbake-builds/poky-whinlatter/layers/yocto-docs
+	url = https://git.yoctoproject.org/yocto-docs
+	branch = whinlatter
