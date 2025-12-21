@@ -3,4 +3,3 @@ cd $PROJECT_ROOT/bitbake-builds/poky-whinlatter/layers/openembedded-core
 set $PROJECT_ROOT/bitbake-builds/poky-whinlatter/build
 . ./oe-init-build-env
 set --
-

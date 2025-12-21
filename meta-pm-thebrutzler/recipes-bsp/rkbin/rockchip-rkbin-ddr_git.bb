@@ -1,3 +1,4 @@
+SUMMARY = "Rockchip Firmware for DDR init "
 DESCRIPTION = "Rockchip Firmware for DDR init (TPL in U-Boot terms)"
 
 require rockchip-rkbin.inc
@@ -33,7 +34,7 @@ RKBIN_DDR_RECONFIGURE ?= "0"
 DEPENDS += "${@'rockchip-rkbin-native' if d.getVar('RKBIN_DDR_RECONFIGURE') == '1' else ''}"
 
 # ... and it expects a file as input, which is named ddrbin_param.txt in the tree.
-SRC_URI += "${@'file://ddrbin_param.txt' if d.getVar('RKBIN_DDR_RECONFIGURE') == '1' else ''}"
+SRC_URI:append = " ${@'file://ddrbin_param.txt' if d.getVar('RKBIN_DDR_RECONFIGURE') == '1' else ''}"
 
 python __anonymous() {
     # Because rockchip-rkbin.inc inherits bin_package and we need to run some step before
@@ -47,18 +48,18 @@ python __anonymous() {
 }
 
 do_configure() {
-	if [ "${RKBIN_DDR_RECONFIGURE}" = "1" ]; then
-		# ddrbin_tool.py always modifies a date in the DDR blob, based on current time.
-		# This is bad for reproducibility and hashequiv usage, so use the commit author
-		# date of the last change made to the DDR bin.
-		# DATE must be max 17-character long!
-		RKBIN_DDR_DATE=$(git log --pretty=format:"%ad" --date=format:"%Y%m%d-%H:%M:%S" -1 -- ${S}/${RKBIN_BINDIR}${RKBIN_BINFILE})
-		# DDRBIN_TOOL_SOC is mostly useless except for rk3528 for now. It needs to match one string in the global
-		# chip_list array in ddrbin_tool.py.
-		if [ -z "${DDRBIN_TOOL_SOC}" ]; then
-			bbfatal "Non-empty DDRBIN_TOOL_SOC:<MACHINE> required!"
-		fi
-		# Modify blob with appropriate settings stored in ddrbin_params.txt
-		ddrbin_tool.py ${DDRBIN_TOOL_SOC} ${UNPACKDIR}/ddrbin_param.txt ${S}/${RKBIN_BINDIR}${RKBIN_BINFILE} --verinfo_editable "${RKBIN_DDR_DATE}"
-	fi
+    if [ "${RKBIN_DDR_RECONFIGURE}" = "1" ]; then
+        # ddrbin_tool.py always modifies a date in the DDR blob, based on current time.
+        # This is bad for reproducibility and hashequiv usage, so use the commit author
+        # date of the last change made to the DDR bin.
+        # DATE must be max 17-character long!
+        RKBIN_DDR_DATE=$(git log --pretty=format:"%ad" --date=format:"%Y%m%d-%H:%M:%S" -1 -- ${S}/${RKBIN_BINDIR}${RKBIN_BINFILE})
+        # DDRBIN_TOOL_SOC is mostly useless except for rk3528 for now. It needs to match one string in the global
+        # chip_list array in ddrbin_tool.py.
+        if [ -z "${DDRBIN_TOOL_SOC}" ]; then
+            bbfatal "Non-empty DDRBIN_TOOL_SOC:<MACHINE> required!"
+        fi
+        # Modify blob with appropriate settings stored in ddrbin_params.txt
+        ddrbin_tool.py ${DDRBIN_TOOL_SOC} ${UNPACKDIR}/ddrbin_param.txt ${S}/${RKBIN_BINDIR}${RKBIN_BINFILE} --verinfo_editable "${RKBIN_DDR_DATE}"
+    fi
 }

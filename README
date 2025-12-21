@@ -5,6 +5,7 @@ This repository contains the Yocto/BitBake build system for **TheBrutzler v1**, 
 ## Overview
 
 **Build System**: Yocto Project (Whinlatter release)
+**Distro**: Platinenmacher Linux (based on poky)
 
 ## Repository Structure
 
@@ -17,10 +18,13 @@ pm-build/
 │       ├── buildtools/        # SDK and build tools
 │       └── layers/            # Upstream Yocto layers
 ├── meta-platinenmacher/       # Common Platinenmacher layer
+│   └── conf/                  # Board and layer configuration
+│       └── distro/            # Distro definitions
+│           └── platinenmacher-linux.conf
 ├── meta-pm-thebrutzler/       # TheBrutzler v1 specific layer
-│   ├── conf/                  # Board and layer configuration
-│   │   └── machine/           # Machine definitions
-│   │       └── thebrutzler_v1.conf
+│   └── conf/                  # Board and layer configuration
+│       └── machine/           # Machine definitions
+│           └── thebrutzler_v1.conf
 └── init-build-env            # Environment setup script
 ```
 
@@ -209,5 +213,5 @@ See individual layer COPYING.MIT files for license information.
 ---
 
 **Maintainer**: Platinenmacher
-**Version**: 0.1.0  
+**Version**: 0.1.0
 **Last Updated**: December 2025

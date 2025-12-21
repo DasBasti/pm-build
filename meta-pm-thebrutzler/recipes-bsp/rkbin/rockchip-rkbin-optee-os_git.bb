@@ -1,3 +1,4 @@
+SUMMARY = "Rockchip OP-TEE OS (BL32)"
 DESCRIPTION = "Rockchip OP-TEE OS (BL32) blob"
 
 require rockchip-rkbin.inc

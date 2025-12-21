@@ -1,3 +1,4 @@
+SUMMARY = "Rockchip Trusted-Firmware-A (BL31)"
 DESCRIPTION = "Rockchip Trusted-Firmware-A (BL31) blob"
 
 require rockchip-rkbin.inc

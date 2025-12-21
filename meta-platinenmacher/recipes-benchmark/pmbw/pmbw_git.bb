@@ -1,18 +1,15 @@
-SUMMERY = "Parallel Memory Bandwidth Measurement / Benchmark"
+SUMMARY = "Parallel Memory Bandwidth Measurement / Benchmark"
 DESCRIPTION = "\
-The tool pmbw is a set of assembler routines to measure the parallel memory \
-(cache and RAM) bandwidth of modern multi-core machines."
+    The tool pmbw is a set of assembler routines to measure the parallel memory \
+    (cache and RAM) bandwidth of modern multi-core machines."
 HOMEPAGE = "http://panthema.net/2013/pmbw/"
 SECTION = "benchmark/tests"
-AUTHOR = "Timo Bingmann"
 LICENSE = "GPL-3.0-only"
 LIC_FILES_CHKSUM = "file://COPYING;md5=d32239bcb673463ab874e80d47fae504"
 
-SRC_URI = "git://github.com/bingmann/pmbw;protocol=https;branch=master"
-
 PV = "0.6.3+git${SRCPV}"
+SRC_URI = "git://github.com/bingmann/pmbw;protocol=https;branch=master"
 SRCREV = "1a2f3ff96e6c9b8f9fc85084909edde6afac34ce"
-
 
 inherit autotools
 

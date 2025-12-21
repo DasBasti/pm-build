@@ -1,7 +1,9 @@
-SRC_URI = "git://github.com/rockchip-linux/rkbin;protocol=https;branch=master"
-SRCREV = "f43a462e7a1429a9d407ae52b4745033034a6cf9"
+HOMEPAGE = "https://github.com/rockchip-linux/rkbin"
 LICENSE = "Proprietary"
 LIC_FILES_CHKSUM = "file://LICENSE;md5=11e3673115959bf596feaaa6ea7ce9a5"
+
+SRC_URI = "git://github.com/rockchip-linux/rkbin;protocol=https;branch=master"
+SRCREV = "f43a462e7a1429a9d407ae52b4745033034a6cf9"
 
 inherit bin_package deploy
 
@@ -16,8 +18,8 @@ COMPATIBLE_MACHINE:rk3588s = "rk3588s"
 PACKAGE_ARCH = "${MACHINE_ARCH}"
 
 do_install() {
-	# Nothing in this recipe is useful in a filesystem
-	:
+    # Nothing in this recipe is useful in a filesystem
+    :
 }
 
 PACKAGES = "${PN}"
@@ -29,19 +31,19 @@ RKBIN_BINDIR:rk3568 ?= "bin/rk35/"
 RKBIN_BINDIR:rk3588s ?= "bin/rk35/"
 
 do_deploy() {
-	if [ -z "${RKBIN_BINDIR}" ]; then
-		bbfatal "Non-empty RKBIN_BINDIR:<MACHINE> required!"
-	fi
+    if [ -z "${RKBIN_BINDIR}" ]; then
+        bbfatal "Non-empty RKBIN_BINDIR:<MACHINE> required!"
+    fi
 
-	if [ -z "${RKBIN_BINFILE}" ]; then
-		bbfatal "Non-empty RKBIN_BINFILE:<MACHINE> required!"
-	fi
+    if [ -z "${RKBIN_BINFILE}" ]; then
+        bbfatal "Non-empty RKBIN_BINFILE:<MACHINE> required!"
+    fi
 
-	if [ -z "${RKBIN_DEPLOY_FILENAME}" ]; then
-		bbfatal "Non-empty RKBIN_DEPLOY_FILENAME:<MACHINE> required!"
-	fi
+    if [ -z "${RKBIN_DEPLOY_FILENAME}" ]; then
+        bbfatal "Non-empty RKBIN_DEPLOY_FILENAME:<MACHINE> required!"
+    fi
 
-	install -m 644 ${S}/${RKBIN_BINDIR}${RKBIN_BINFILE} ${DEPLOYDIR}/${RKBIN_DEPLOY_FILENAME}
+    install -m 644 ${S}/${RKBIN_BINDIR}${RKBIN_BINFILE} ${DEPLOYDIR}/${RKBIN_DEPLOY_FILENAME}
 }
 
 addtask deploy after do_install
