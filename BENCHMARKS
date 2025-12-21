@@ -1,0 +1,97 @@
+# Benchmark Tools Documentation
+
+This document describes the benchmark tools available in the `packagegroup-benchmark` package and how to use them on embedded devices.
+
+## Sysbench
+
+Sysbench is a scriptable multi-threaded benchmark tool for evaluating system performance under various loads.
+
+### Basic Usage
+
+#### CPU Benchmark
+```bash
+# CPU benchmark with 4 threads for 60 seconds
+sysbench cpu --threads=4 --time=60 run
+
+# Quick CPU test (10 seconds)
+sysbench cpu --time=10 run
+```
+
+#### Memory Benchmark
+```bash
+# Memory write speed test
+sysbench memory --memory-total-size=1G --memory-oper=write run
+
+# Memory read speed test
+sysbench memory --memory-total-size=1G --memory-oper=read run
+
+# Random memory access
+sysbench memory --memory-access-mode=rnd --memory-total-size=1G run
+```
+
+#### Threads Benchmark
+```bash
+# Thread synchronization test
+sysbench threads --threads=8 --thread-yields=100 --thread-locks=2 run
+```
+
+#### Mutex Benchmark
+```bash
+# Mutex performance test
+sysbench mutex --threads=4 --mutex-num=1000 --mutex-locks=10000 run
+```
+
+#### File I/O Benchmark
+```bash
+# Prepare test files (run once)
+sysbench fileio --file-total-size=2G prepare
+
+# Sequential write test
+sysbench fileio --file-total-size=2G --file-test-mode=seqwr --time=60 run
+
+# Random read/write test
+sysbench fileio --file-total-size=2G --file-test-mode=rndrw --time=60 run
+
+# Sequential read test
+sysbench fileio --file-total-size=2G --file-test-mode=seqrd --time=60 run
+
+# Cleanup after testing
+sysbench fileio --file-total-size=2G cleanup
+```
+
+### Typical Embedded Device Workflow
+
+```bash
+# 1. Quick CPU benchmark (30 seconds)
+sysbench cpu --time=30 run
+
+# 2. Memory throughput test
+sysbench memory --memory-total-size=512M --time=30 run
+
+# 3. File I/O benchmark (if storage available)
+sysbench fileio --file-total-size=500M prepare
+sysbench fileio --file-total-size=500M --file-test-mode=seqwr run
+sysbench fileio --file-total-size=500M --file-test-mode=seqrd run
+sysbench fileio --file-total-size=500M cleanup
+```
+
+### Key Parameters
+
+- `--threads=N` - Number of threads to use (match your CPU cores)
+- `--time=N` - Duration in seconds
+- `--events=N` - Number of events to execute
+- `--rate=N` - Target event rate per second
+- `--percentile=N` - Percentile to calculate (default: 95)
+
+### File I/O Test Modes
+
+- `seqwr` - Sequential write
+- `seqrewr` - Sequential rewrite
+- `seqrd` - Sequential read
+- `rndrd` - Random read
+- `rndwr` - Random write
+- `rndrw` - Random read/write
+
+### Reference
+
+Documentation: https://github.com/akopytov/sysbench
