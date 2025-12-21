@@ -21,3 +21,7 @@
 	path = bitbake-builds/poky-whinlatter/layers/yocto-docs
 	url = https://git.yoctoproject.org/yocto-docs
 	branch = whinlatter
+[submodule "bitbake-builds/poky-whinlatter/layers/meta-openembedded"]
+	path = bitbake-builds/poky-whinlatter/layers/meta-openembedded
+	url = https://git.openembedded.org/meta-openembedded
+	branch = whinlatter
