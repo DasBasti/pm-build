@@ -193,6 +193,37 @@ source init-build-env
 bitbake-layers show-layers
 ```
 
+## Pre-commit Hooks
+
+This project uses [pre-commit](https://pre-commit.com/) to maintain code quality and consistency. Pre-commit hooks automatically check your changes before committing.
+
+### Installation
+
+```bash
+# Install pre-commit
+pip install pre-commit
+
+# Install the git hook scripts
+pre-commit install
+```
+
+### Usage
+
+Once installed, pre-commit will automatically run on `git commit`. To manually run all hooks on all files:
+
+```bash
+pre-commit run --all-files
+```
+
+### Configured Hooks
+
+- **Trailing whitespace**: Removes trailing whitespace
+- **End of file fixer**: Ensures files end with a newline
+- **YAML/JSON syntax**: Validates configuration files
+- **Mixed line endings**: Normalizes line endings
+- **Large files check**: Prevents committing large files
+- **Merge conflict markers**: Detects unresolved merge conflicts
+
 ## Contributing
 
 When contributing to this project:
@@ -213,5 +244,5 @@ See individual layer COPYING.MIT files for license information.
 ---
 
 **Maintainer**: Platinenmacher
-**Version**: 0.1.0
+**Version**: 0.2.0
 **Last Updated**: December 2025
