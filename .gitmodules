@@ -25,3 +25,7 @@
 	path = bitbake-builds/poky-whinlatter/layers/meta-openembedded
 	url = https://git.openembedded.org/meta-openembedded
 	branch = whinlatter
+[submodule "bitbake-builds/poky-whinlatter/layers/meta-swupdate"]
+	path = bitbake-builds/poky-whinlatter/layers/meta-swupdate
+	url = https://github.com/sbabic/meta-swupdate
+	branch = whinlatter
