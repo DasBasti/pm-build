@@ -6,13 +6,15 @@ export PROJECT_ROOT
 
 # Source build environment scripts directly (no safeguards)
 if [ -f "$PROJECT_ROOT/bitbake-builds/poky-whinlatter/build/init-build-env" ]; then
-  . "$PROJECT_ROOT/bitbake-builds/poky-whinlatter/build/init-build-env"
+  echo "Sourcing $PROJECT_ROOT/bitbake-builds/poky-whinlatter/build/init-build-env"
+  source "$PROJECT_ROOT/bitbake-builds/poky-whinlatter/build/init-build-env"
 else
   echo "Warning: init-build-env not found at $PROJECT_ROOT/bitbake-builds/poky-whinlatter/build/init-build-env" >&2
 fi
 
 if [ -f "$PROJECT_ROOT/bitbake-builds/poky-whinlatter/buildtools/environment-setup-x86_64-pokysdk-linux" ]; then
-  . "$PROJECT_ROOT/bitbake-builds/poky-whinlatter/buildtools/environment-setup-x86_64-pokysdk-linux"
+  echo "Sourcing $PROJECT_ROOT/bitbake-builds/poky-whinlatter/buildtools/environment-setup-x86_64-pokysdk-linux"
+  source "$PROJECT_ROOT/bitbake-builds/poky-whinlatter/buildtools/environment-setup-x86_64-pokysdk-linux"
 else
   echo "Warning: environment-setup script not found at $PROJECT_ROOT/bitbake-builds/poky-whinlatter/buildtools/environment-setup-x86_64-pokysdk-linux" >&2
 fi

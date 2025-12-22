@@ -26,11 +26,7 @@ jobs:
 
       - name: Build images
         run: |
-          set -euo pipefail
-
-          # Source the init-build-env script
           source ./init-build-env
-          # Build all three images
           bitbake brutzelboy brutzelboy-swupdate brutzelboy-swupdate-full
 
       - name: List built artifacts
