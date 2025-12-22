@@ -415,5 +415,5 @@ See individual layer COPYING.MIT files for license information.
 ---
 
 **Maintainer**: Platinenmacher
-**Version**: 0.2.0
+**Version**: 0.3.0
 **Last Updated**: December 2025
