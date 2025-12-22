@@ -1,0 +1,15 @@
+[Unit]
+Description=Resize userdata partition on first boot
+DefaultDependencies=no
+After=systemd-udev-settle.service local-fs-pre.target
+Before=local-fs.target
+ConditionPathExists=!/var/lib/resize-userdata-done
+
+[Service]
+Type=oneshot
+ExecStart=/usr/sbin/resize-userdata.sh
+RemainAfterExit=yes
+StandardOutput=journal+console
+
+[Install]
+WantedBy=multi-user.target

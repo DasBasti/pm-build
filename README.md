@@ -91,7 +91,70 @@ flash-bmap <path-to-wic-file> /dev/sdX
 ## Available Images
 
 ### brutzelboy
-An image for the brutzelboy during development.
+An image for the brutzelboy during development with A/B partition layout for OTA updates.
+
+**Features:**
+- A/B rootfs partitions (rootfsA and rootfsB) for safe updates
+- Dynamic partition sizing (2GB per rootfs partition)
+- Persistent userdata partition mounted at /home
+- First-boot automatic expansion of userdata to use remaining disk space
+- Configuration persistence across updates (SSH keys, network settings, etc.)
+- Pre-configured thebrutzler user (UID 1000) with passwordless sudo
+- OpenSSH server for remote access
+- SWUpdate integration for reliable OTA updates
+
+### brutzelboy-swupdate
+SWUpdate package (.swu) containing the rootfs image for A/B updates (rootfs only).
+
+**Build:**
+```bash
+bitbake brutzelboy-swupdate
+```
+
+**Deploy:**
+The generated .swu file can be deployed via SWUpdate's web interface (port 8080) or command line.
+
+### brutzelboy-swupdate-full
+Full SWUpdate package (.swu) containing rootfs AND bootloader components with intelligent version checking.
+
+**Features:**
+- Includes rootfs, idbloader.img, and u-boot.itb
+- Conditional bootloader updates (only if version is newer)
+- Version tracking via /etc/bootloader-version and U-Boot environment
+- Safer than manual bootloader flashing
+
+**Build:**
+```bash
+bitbake brutzelboy-swupdate-full
+```
+
+**When to use:**
+- Use `brutzelboy-swupdate` for regular rootfs updates (safer, faster)
+- Use `brutzelboy-swupdate-full` when bootloader updates are needed
+
+**Note:** The Lua hook `check_bootloader_version` compares versions before updating bootloader components.
+
+## System Users
+
+### thebrutzler (UID 1000)
+Pre-configured user account for system access:
+
+**Login:**
+- **Serial Console**: No password required (just press Enter at prompt)
+- **SSH**: Set up SSH keys in /home/thebrutzler/.ssh/
+
+**Permissions:**
+- Passwordless sudo access (member of sudo, wheel groups)
+- Member of audio, video groups for hardware access
+- Home directory: /home/thebrutzler (persistent across updates)
+
+**Shell**: /bin/bash
+
+### root
+Root account for system administration:
+- No password set by default
+- Direct serial console login available
+- Use `sudo` from thebrutzler account for daily operations
 
 ## Meta Layers
 
@@ -110,8 +173,17 @@ TheBrutzler v2 hardware-specific layer containing:
 ### meta-platinenmacher
 Common Platinenmacher layer with:
 - **Benchmark recipes**: Performance testing tools
-- **Image recipes**: Standard image definitions
+- **Image recipes**: Standard image definitions with A/B update support
 - **Package groups**: Curated software collections
+- **Update system**: SWUpdate integration with A/B rootfs partitioning
+- **Bootloader updates**: Conditional bootloader updates with version tracking
+- **WKS files**: Custom partitioning layouts (platinenmacher-ab.wks)
+- **System services**:
+  - First-boot userdata partition resize (resize-userdata.service)
+  - Configuration persistence (persist-config.service, restore-config.service)
+  - Bootloader version sync (swupdate-bootenv.service)
+  - Systemd mount unit for /home
+- **User management**: Pre-configured thebrutzler user with passwordless sudo
 
 ## Build Configuration
 
@@ -147,12 +219,68 @@ Device tree files are located in `meta-pm-thebrutzler/recipes-kenel/linux/files/
 KERNEL_DEVICETREE = "rockchip/lcsc-taishanpi-rk3566.dtb"
 ```
 
+## Partition Layout
+
+The system uses an A/B partition scheme for safe OTA updates:
+
+```
+/dev/mmcblk0p1-8  : Bootloader partitions (loader1, v_storage, reserved, etc.)
+/dev/mmcblk0p9    : rootfsA (active root filesystem, 2GB)
+/dev/mmcblk0p10   : rootfsB (inactive root filesystem for updates, 2GB)
+/dev/mmcblk0p11   : userdata (mounted at /home, expands to fill remaining space)
+```
+
+**Key Features:**
+- **Fixed Root Size**: Each root partition is 2GB for predictable updates
+- **Persistent Storage**: /home is on a separate partition that survives updates
+- **Configuration Persistence**: System settings saved to /home/.system-config/
+- **First Boot Resize**: userdata partition automatically expands on first boot using:
+  - Partition label detection (/dev/disk/by-partlabel/userdata)
+  - GPT header relocation to end of disk
+  - Automatic filesystem expansion
+- **Systemd Mount Unit**: /home mounted via systemd using PARTLABEL (device-independent)
+- **Update Safety**: Update to inactive partition, switch on success
+
+### Configuration Persistence
+
+The system preserves critical configuration across updates:
+
+**Preserved Settings** (stored in /home/.system-config/):
+- SSH host keys (/etc/ssh/ssh_host_*)
+- Hostname (/etc/hostname)
+- Machine ID (/etc/machine-id)
+- WPA Supplicant configuration (/etc/wpa_supplicant/)
+- ConnMan network settings (/var/lib/connman/)
+- SWUpdate configuration (/etc/swupdate/)
+
+**Lifecycle:**
+- `persist-config.service`: Runs before shutdown/reboot to save configs
+- `restore-config.service`: Runs at boot to restore saved configs
+
+**User Data** (in /home/thebrutzler/):
+- User files and directories persist automatically
+
 ## Common Tasks
 
 ### Build brutzelboy
 ```bash
 bitbake brutzelboy
 ```
+
+### Build Update Packages
+```bash
+# Rootfs-only update (recommended for most updates)
+bitbake brutzelboy-swupdate
+
+# Full update with bootloader (when bootloader needs updating)
+bitbake brutzelboy-swupdate-full
+```
+The .swu files will be in `tmp/deploy/images/thebrutzler_v2/`
+
+**Bootloader Version Tracking:**
+- Current version stored in `/etc/bootloader-version`
+- Synced to U-Boot environment variable `bootloader_version`
+- Full updates only write bootloader if newer version detected
 
 ### Clean Build
 ```bash
@@ -181,6 +309,40 @@ Located in `meta-pm-thebrutzler/bin/`, this script simplifies flashing images us
 ```bash
 flash-bmap <image.wic> <device>
 ```
+
+### SWUpdate
+The system includes SWUpdate for A/B updates:
+
+**Web Interface**: http://device-ip:8080
+
+**Command Line Update**:
+```bash
+# Rootfs only
+swupdate -i brutzelboy-swupdate-thebrutzler_v2.swu
+
+# Full update with bootloader
+swupdate -i brutzelboy-swupdate-full-thebrutzler_v2.swu
+```
+
+**Bootloader Updates:**
+- Hardware compatibility checked against `/etc/hwrevision` (version 2.0)
+- Bootloader version checked before updating (only if newer)
+- Version information stored in U-Boot environment
+- Check current bootloader version: `fw_printenv bootloader_version`
+- U-Boot environment configuration: `/etc/fw_env.config`
+
+**Configuration Persistence:**
+- System configuration automatically saved before shutdown/reboot
+- Settings restored after updates complete
+- User data in /home persists across all updates
+- No manual backup needed for SSH keys or network settings
+
+**First Boot**: The userdata partition at /home will automatically expand to use all available disk space:
+- Waits for udev to settle and partition labels to appear
+- Fixes GPT backup header location
+- Resizes partition to 100% of available space
+- Expands ext4 filesystem to match
+- Creates marker file to prevent re-running
 
 ## Troubleshooting
 

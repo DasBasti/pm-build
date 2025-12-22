@@ -1,0 +1,2 @@
+# Allow thebrutzler user to run commands without password
+thebrutzler ALL=(ALL) NOPASSWD: ALL

@@ -2,7 +2,7 @@
 
 ## General functions
 - [x] Update motd
-- [ ] Create fitImage
+- [x] Create fitImage
 
 ## Devicetree nodes
 - [x] Add dedicated device tree for PCB
@@ -57,10 +57,13 @@
   - [x] RK809 out
 
 ## Partition schema
-- [ ] add secondary rootfs partition
-- [ ] create swupdate sw-description file
-- [ ] provice swupdate server
+- [x] add secondary rootfs partition
+- [x] create swupdate sw-description file
+- [x] create resize-userdata service for persistent /home
+- [ ] provide swupdate server
 
+## User
+- [x] Add user thebrutzler
 
 ## GH Release
-- [ ] upload an image to Github Release
+- [x] upload an image to Github Release

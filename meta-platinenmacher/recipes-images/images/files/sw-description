@@ -1,0 +1,46 @@
+software =
+{
+    version = "@@DISTRO_VERSION@@";
+
+    thebrutzler-v2 = {
+        hardware-compatibility: [ "2.0" ];
+
+        stable = {
+            copy1 : {
+                images: (
+                    {
+                        filename = "brutzelboy-thebrutzler_v2.rootfs.ext4";
+                        device = "/dev/disk/by-partlabel/rootfsB";
+                        type = "raw";
+                        sha256 = "$swupdate_get_sha256(brutzelboy-thebrutzler_v2.rootfs.ext4)";
+                    }
+                );
+
+                bootenv: (
+                    {
+                        name = "rootfs_part";
+                        value = "rootfsB";
+                    }
+                );
+            };
+
+            copy2 : {
+                images: (
+                    {
+                        filename = "brutzelboy-thebrutzler_v2.rootfs.ext4";
+                        device = "/dev/disk/by-partlabel/rootfsA";
+                        type = "raw";
+                        sha256 = "$swupdate_get_sha256(brutzelboy-thebrutzler_v2.rootfs.ext4)";
+                    }
+                );
+
+                bootenv: (
+                    {
+                        name = "rootfs_part";
+                        value = "rootfsA";
+                    }
+                );
+            };
+        };
+    };
+}

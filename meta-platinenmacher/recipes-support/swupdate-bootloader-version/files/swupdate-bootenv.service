@@ -1,0 +1,12 @@
+[Unit]
+Description=Set bootloader version in U-Boot environment
+After=local-fs.target
+Before=swupdate.service
+
+[Service]
+Type=oneshot
+ExecStart=/usr/sbin/swupdate-set-bootenv.sh
+RemainAfterExit=yes
+
+[Install]
+WantedBy=multi-user.target

@@ -1,0 +1,14 @@
+[Unit]
+Description=Restore persistent configuration from userdata partition
+After=local-fs.target
+Before=network-pre.target sshd.service connman.service systemd-networkd.service
+DefaultDependencies=no
+
+[Service]
+Type=oneshot
+ExecStart=/usr/sbin/restore-config.sh
+RemainAfterExit=yes
+StandardOutput=journal+console
+
+[Install]
+WantedBy=sysinit.target
