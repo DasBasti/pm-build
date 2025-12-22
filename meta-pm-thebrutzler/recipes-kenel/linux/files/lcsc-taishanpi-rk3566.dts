@@ -42,7 +42,7 @@
 
 	hdmi_con: hdmi-con {
 		compatible = "hdmi-connector";
-		type = "d"; /* check type */
+		type = "a"; /* full-size */
 
 		port {
 			hdmi_con_in: endpoint {
@@ -71,16 +71,6 @@
 		regulator-max-microvolt = <12000000>;
 	};
 
-	vcc3v3_sys: regulator-3v3-vcc-sys {
-		compatible = "regulator-fixed";
-		regulator-name = "vcc3v3_sys";
-		regulator-always-on;
-		regulator-boot-on;
-		regulator-min-microvolt = <3300000>;
-		regulator-max-microvolt = <3300000>;
-		vin-supply = <&vcc5v0_sys>;
-	};
-
 	vcc5v0_sys: regulator-5v0-vcc-sys {
 		compatible = "regulator-fixed";
 		regulator-name = "vcc5v0_sys";
@@ -89,6 +79,16 @@
 		regulator-min-microvolt = <5000000>;
 		regulator-max-microvolt = <5000000>;
 		vin-supply = <&vcc12v0_dcin>;
+	};
+
+	vcc3v3_sys: regulator-3v3-vcc-sys {
+		compatible = "regulator-fixed";
+		regulator-name = "vcc3v3_sys";
+		regulator-always-on;
+		regulator-boot-on;
+		regulator-min-microvolt = <3300000>;
+		regulator-max-microvolt = <3300000>;
+		vin-supply = <&vcc5v0_sys>;
 	};
 
 	vcc5v0_host: regulator-5v0-vcc-host {
@@ -109,7 +109,7 @@
 		clock-names = "ext_clock";
 		pinctrl-names = "default";
 		pinctrl-0 = <&wifi_enable_h>;
-		post-power-on-delay-ms = <200>;
+		post-power-on-delay-ms = <500>;
 		reset-gpios = <&gpio2 RK_PB1 GPIO_ACTIVE_LOW>;
 	};
 
@@ -127,7 +127,7 @@
 		};
 	};
 };
-/*
+
 &combphy1 {
 	status = "okay";
 };
@@ -135,7 +135,7 @@
 &combphy2 {
 	status = "okay";
 };
-*/
+
 &cpu0 {
 	cpu-supply = <&vdd_cpu>;
 };
@@ -457,11 +457,9 @@
 
 &i2s0_8ch {
 	status = "okay";
-};
-
-&i2s0_8ch {
-	status = "okay";
 	/* HDMI */
+	#sound-dai-cells = <0>;
+    rockchip,trcm-sync-tx-only;
 };
 
 &i2s1_8ch {
@@ -605,6 +603,7 @@
 		interrupt-names = "host-wake";
 		pinctrl-names = "default";
 		pinctrl-0 = <&wifi_host_wake_h>;
+		brcm,board-type = "AP6212";
 	};
 };
 
