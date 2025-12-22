@@ -30,7 +30,7 @@ echo "Checking files: $FILES"
 # --quiet: Only show findings
 # --color: Add color to output
 # --exit-zero: Don't fail the check (remove this for strict checking)
-oelint-adv --quiet --constantmods "+.oelint-adv/soc-families.json" --extra-layer=openembedded-layer --color --fix --jobs=1 --nobackup --exit-zero $FILES
+oelint-adv --quiet --constantmods "+.oelint-adv/soc-families.json" --extra-layer=openembedded-layer --color --fix --jobs=1 --nobackup --mode all --exit-zero $FILES
 
 EXIT_CODE=$?
 
