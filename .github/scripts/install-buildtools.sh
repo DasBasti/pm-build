@@ -11,6 +11,9 @@ REPO_ROOT="$(cd "$SCRIPT_DIR/../.." && pwd)"
 ENV_FILE=""
 if [ -d "$REPO_ROOT/bitbake-builds" ]; then
   ENV_FILE=$(find "$REPO_ROOT/bitbake-builds" -type f -name 'environment-setup-*' -print -quit 2>/dev/null || true)
+else
+  echo "Error: bitbake-builds directory not found at $REPO_ROOT/bitbake-builds"
+  exit 1
 fi
 
 if [ -n "$ENV_FILE" ] && [ -f "$ENV_FILE" ]; then
@@ -25,6 +28,6 @@ if [ -n "$ENV_FILE" ] && [ -f "$ENV_FILE" ]; then
   . "$ENV_FILE"
   echo "Sourced buildtools environment"
 else
-  echo "Error: environment-setup file not found in bitbake-builds"
+  echo "Error: environment-setup file not found in $REPO_ROOT/bitbake-builds"
   exit 1
 fi
