@@ -1,0 +1,56 @@
+name: Build Images
+
+on:
+  pull_request:
+    branches: [ main ]
+  push:
+    tags:
+      - '*'
+
+jobs:
+  build-images:
+    runs-on: ['self-hosted', 'Linux']
+    timeout-minutes: 480  # 8 hours timeout for Yocto builds
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+        with:
+          submodules: recursive
+          fetch-depth: 0
+
+      - name: Install build tools
+        run: |
+          bash .github/scripts/install-buildtools.sh
+
+      - name: Build images
+        run: |
+          # Source the init-build-env script
+          source ./init-build-env
+
+          # If buildtools env was saved, source it
+          if [ -f "$GITHUB_WORKSPACE/.buildtools_env" ]; then
+            SAVED_ENV_FILE=$(cat "$GITHUB_WORKSPACE/.buildtools_env" 2>/dev/null || true)
+            if [ -n "$SAVED_ENV_FILE" ] && [ -f "$SAVED_ENV_FILE" ]; then
+              echo "Sourcing buildtools env: $SAVED_ENV_FILE"
+              source "$SAVED_ENV_FILE"
+            fi
+          fi
+
+          # Build all three images
+          bitbake brutzelboy brutzelboy-swupdate brutzelboy-swupdate-full
+
+      - name: List built artifacts
+        if: always()
+        run: |
+          echo "Contents of deploy directory:"
+          ls -lah bitbake-builds/**/build/tmp/deploy/images/* || echo "Deploy directory not found"
+
+      - name: Upload build artifacts
+        uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: thebrutzler-images
+          path: bitbake-builds/**/build/tmp/deploy/images/*
+          retention-days: 30
+          if-no-files-found: warn
