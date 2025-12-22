@@ -1,19 +1,16 @@
 This README file contains information on the contents of the meta-platinenmacher layer.
 
+This layer is a distro layer heavily in development.
+
 Please see the corresponding sections below for details.
 
 Dependencies
 ============
 
-  URI: <first dependency>
-  branch: <branch name>
+  This layer depends on:
 
-  URI: <second dependency>
-  branch: <branch name>
-
-  .
-  .
-  .
+  layer: core
+  series: whinlatter
 
 Patches
 =======
