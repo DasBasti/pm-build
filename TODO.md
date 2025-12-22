@@ -1,5 +1,8 @@
 # Bringup log of Thebrutzler V2 PCB
 
+## General functions
+- [x] Update motd
+
 ## Devicetree nodes
 - [x] Add dedicated device tree for PCB
 - Power Regulators
@@ -20,10 +23,11 @@
 - [x] SD-Card (&mmc0 = &sdmmc0)
 - [ ] eMMC (&mmc1 = &sdhci init failed)
 - [x] WiFi-Module (&mmc2 = &sdmmc1)
+  - [ ] No Signals -> Maybe needs an antenna?
 - [x] Bluetooth-Module (&uart1)
 - [ ] HDMI
   - [x] Connector
-  - [ ] Supplies
+  - [x] Supplies
   - [x] Endpoints
   - [ ] HPD -> Does not work!
   - [x] CEC
@@ -31,7 +35,7 @@
   - [ ] Sound
 - [x] GPU
 - USB
-  - [ ] OTG (USB-C)
+  - [ ] OTG (USB-C) -> Doesn't boot when connected to USB-C Port of PC
   - [x] Host1 (USB3.0 MB Connector)
   - [x] Host2 (USB-A)
 - [ ] MIPI DSI
@@ -50,3 +54,12 @@
 - Audio
   - [x] RK809 in
   - [x] RK809 out
+
+## Partition schema
+- [ ] add secondars rootfs partition
+- [ ] create swupdate sw-description file
+- [ ] provice swupdate server
+
+
+## GH Release
+- [ ] upload an image to Github Release
