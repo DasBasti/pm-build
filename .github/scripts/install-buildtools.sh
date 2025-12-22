@@ -2,10 +2,15 @@
 
 set -eo pipefail
 
+# Get the directory where this script is located
+SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
+# Get the repository root (two levels up from .github/scripts)
+REPO_ROOT="$(cd "$SCRIPT_DIR/../.." && pwd)"
+
 # Find the environment-setup file under bitbake-builds
 ENV_FILE=""
-if [ -d "bitbake-builds" ]; then
-  ENV_FILE=$(find bitbake-builds -type f -name 'environment-setup-*' -print -quit 2>/dev/null || true)
+if [ -d "$REPO_ROOT/bitbake-builds" ]; then
+  ENV_FILE=$(find "$REPO_ROOT/bitbake-builds" -type f -name 'environment-setup-*' -print -quit 2>/dev/null || true)
 fi
 
 if [ -n "$ENV_FILE" ] && [ -f "$ENV_FILE" ]; then
@@ -20,6 +25,6 @@ if [ -n "$ENV_FILE" ] && [ -f "$ENV_FILE" ]; then
   . "$ENV_FILE"
   echo "Sourced buildtools environment"
 else
-  echo "Warning: environment-setup file not found in bitbake-builds"
+  echo "Error: environment-setup file not found in bitbake-builds"
   exit 1
 fi
