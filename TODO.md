@@ -2,6 +2,7 @@
 
 ## General functions
 - [x] Update motd
+- [ ] Create fitImage
 
 ## Devicetree nodes
 - [x] Add dedicated device tree for PCB
@@ -56,7 +57,7 @@
   - [x] RK809 out
 
 ## Partition schema
-- [ ] add secondars rootfs partition
+- [ ] add secondary rootfs partition
 - [ ] create swupdate sw-description file
 - [ ] provice swupdate server
 

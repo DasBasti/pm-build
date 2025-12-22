@@ -1,6 +1,7 @@
-# TheBrutzler v1 Build System
+# Platinenmacher Linux Build System
 
-This repository contains the Yocto/BitBake build system for **TheBrutzler v1**, an embedded board built with the Rockchip RK3566 SoC. The build system generates custom Linux images for the hardware platform.
+This repository contains the Yocto/BitBake build system for [**TheBrutzler v2**](https://github.com/theBrutzler/BrutzelBoy_V2), an embedded board built with the Rockchip RK3566 SoC.
+The build system generates custom Linux images for the hardware platform.
 
 ## Overview
 
@@ -11,21 +12,27 @@ This repository contains the Yocto/BitBake build system for **TheBrutzler v1**, 
 
 ```
 pm-build/
-├── bitbake/                   # BitBake build tool
-├── bitbake-builds/            # Build configurations and output
-│   └── poky-whinlatter/       # Poky distribution build
-│       ├── build/             # Build directory
-│       ├── buildtools/        # SDK and build tools
-│       └── layers/            # Upstream Yocto layers
-├── meta-platinenmacher/       # Common Platinenmacher layer
-│   └── conf/                  # Board and layer configuration
-│       └── distro/            # Distro definitions
+├── bitbake/                       # BitBake build tool
+├── bitbake-builds/                # Build configurations and output
+│   └── poky-whinlatter/           # Poky distribution build
+│       ├── build/                 # Build directory
+│       ├── buildtools/            # SDK and build tools
+│       └── layers/                # Upstream Yocto layers
+│           ├── meta-arm/          # https://git.yoctoproject.org/meta-arm
+│           ├── meta-openembedded/ # https://git.openembedded.org/meta-openembedded
+│           ├── meta-rockchip/     # https://git.yoctoproject.org/meta-rockchip
+│           ├── meta-swupdate/     # https://github.com/sbabic/meta-swupdate
+│           ├── meta-yocto/        # https://git.yoctoproject.org/meta-yocto
+│           └── openembedded-core/ # https://git.openembedded.org/openembedded-core
+├── meta-platinenmacher/           # Common Platinenmacher layer
+│   └── conf/                      # Board and layer configuration
+│       └── distro/                # Distro definitions
 │           └── platinenmacher-linux.conf
-├── meta-pm-thebrutzler/       # TheBrutzler v1 specific layer
-│   └── conf/                  # Board and layer configuration
-│       └── machine/           # Machine definitions
-│           └── thebrutzler_v1.conf
-└── init-build-env            # Environment setup script
+├── meta-pm-thebrutzler/           # TheBrutzler v2 specific layer
+│   └── conf/                      # Board and layer configuration
+│       └── machine/               # Machine definitions
+│           └── thebrutzler_v2.conf
+└── init-build-env                 # Environment setup script
 ```
 
 ## Prerequisites
@@ -57,15 +64,15 @@ This script will:
 - Add TheBrutzler utility scripts to PATH
 
 ### 2. Configure the Build
-The build is pre-configured for TheBrutzler v1 in:
-- **Machine config**: `meta-pm-thebrutzler/conf/machine/thebrutzler_v1.conf`
+The build is pre-configured for TheBrutzler v2 in:
+- **Machine config**: `meta-pm-thebrutzler/conf/machine/thebrutzler_v2.conf`
 - **Layer config**: `bitbake-builds/poky-whinlatter/build/conf/bblayers.conf`
 - **Local config**: `bitbake-builds/poky-whinlatter/build/conf/local.conf`
 
 ### 3. Build an Image
 ```bash
 # Build the minimal benchmark image
-bitbake brutzelmark
+bitbake brutzelboy
 
 # Or build a custom image
 bitbake <your-image-name>
@@ -83,16 +90,13 @@ flash-bmap <path-to-wic-file> /dev/sdX
 
 ## Available Images
 
-### brutzelmark
-A minimal image based on `core-image-minimal` with benchmark tools:
-- Base system utilities
-- Performance benchmark suite (pmbw)
-- Optimized for testing and evaluation
+### brutzelboy
+An image for the brutzelboy during development.
 
 ## Meta Layers
 
 ### meta-pm-thebrutzler
-TheBrutzler v1 hardware-specific layer containing:
+TheBrutzler v2 hardware-specific layer containing:
 - **Machine Configuration**: RK3566/RK3568 board definitions
 - **Kernel**: Linux kernel recipes and device trees
 - **BSP**: Rockchip binary packages (rkbin)
@@ -111,12 +115,12 @@ Common Platinenmacher layer with:
 
 ## Build Configuration
 
-### Machine: thebrutzler_v1
+### Machine: thebrutzler_v2
 - **Architecture**: ARM64 (aarch64)
 - **SoC Family**: Rockchip RK3566/RK3568
 - **Kernel**: linux-yocto-dev
-- **U-Boot**: evb-rk3568_defconfig
-- **Device Tree**: rockchip/rk3568-evb1-v10.dtb
+- **U-Boot**: `lckfb-tspi-rk3566_defconfig`
+- **Device Tree**: `meta-pm-thebrutzler/recipes-kenel/linux/files/lcsc-taishanpi-rk3566.dts`
 - **Kernel Image**: FIT image with artifacts
 
 ### Layer Compatibility
@@ -138,12 +142,17 @@ bitbake virtual/kernel -c savedefconfig
 ```
 
 ### Updating Device Tree
-Device tree files are specified in machine config:
+Device tree files are located in `meta-pm-thebrutzler/recipes-kenel/linux/files/lcsc-taishanpi-rk3566.dts` and set in machine config:
 ```bash
-KERNEL_DEVICETREE = "rockchip/rk3568-evb1-v10.dtb"
+KERNEL_DEVICETREE = "rockchip/lcsc-taishanpi-rk3566.dtb"
 ```
 
 ## Common Tasks
+
+### Build brutzelboy
+```bash
+bitbake brutzelboy
+```
 
 ### Clean Build
 ```bash
@@ -152,7 +161,7 @@ bitbake -c cleanall <recipe-name>
 
 ### Build SDK
 ```bash
-bitbake brutzelmark -c populate_sdk
+bitbake <image-name> -c populate_sdk
 ```
 
 ### List Available Recipes

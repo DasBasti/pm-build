@@ -1,7 +1,7 @@
-COMPATIBLE_MACHINE:thebrutzler-v1 = "thebrutzler-v1"
+COMPATIBLE_MACHINE:thebrutzler-v2 = "thebrutzler-v2"
 FILESEXTRAPATHS:prepend := "${THISDIR}/files:"
 
-SRC_URI:append:thebrutzler-v1 = "\
+SRC_URI:append:thebrutzler-v2 = "\
     file://rockchip-kmeta;type=kmeta;name=rockchip-kmeta;destsuffix=rockchip-kmeta \
     file://lcsc-taishanpi-rk3566.dts;subdir=dts-files \
 "
