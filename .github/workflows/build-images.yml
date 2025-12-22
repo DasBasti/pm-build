@@ -43,14 +43,39 @@ jobs:
       - name: List built artifacts
         if: always()
         run: |
-          echo "Contents of deploy directory:"
-          ls -lah bitbake-builds/**/build/tmp/deploy/images/* || echo "Deploy directory not found"
+          echo "Contents of deploy directory (searching recursively):"
+          if find bitbake-builds -type f -path "*/build/tmp/deploy/images/*" -print | sed 's/^/  /'; then
+            echo "Finished listing deploy artifacts."
+          else
+            echo "Deploy directory not found or no artifacts present."
+          fi
+
+      - name: Discover image artifacts
+        if: always()
+        id: discover-images
+        run: |
+          echo "Discovering image artifacts under bitbake-builds/..."
+          IMAGE_PATHS=$(find bitbake-builds -type f -path "*/build/tmp/deploy/images/*" -print 2>/dev/null || true)
+
+          if [ -z "$IMAGE_PATHS" ]; then
+            echo "No image artifacts found."
+            # Leave IMAGE_PATHS unset/empty; upload step will honor if-no-files-found: warn
+          else
+            echo "Found the following image artifacts:"
+            printf '%s\n' "$IMAGE_PATHS" | sed 's/^/  /'
+
+            {
+              echo "IMAGE_PATHS<<EOF"
+              printf '%s\n' "$IMAGE_PATHS"
+              echo "EOF"
+            } >> "$GITHUB_ENV"
+          fi
 
       - name: Upload build artifacts
         uses: actions/upload-artifact@v4
         if: always()
         with:
           name: thebrutzler-images
-          path: bitbake-builds/**/build/tmp/deploy/images/*
+          path: ${{ env.IMAGE_PATHS }}
           retention-days: 30
           if-no-files-found: warn
