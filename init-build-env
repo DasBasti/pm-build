@@ -59,4 +59,5 @@ else
 fi
 
 PATH="$PROJECT_ROOT/meta-pm-thebrutzler/bin:$PATH"
+PATH="$PROJECT_ROOT/meta-platinenmacher/bin:$PATH"
 export PATH
