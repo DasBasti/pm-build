@@ -2,4 +2,4 @@
 
 source ./init-build-env
 
-bitbake brutzelboy brutzelboy-swupdate
+bitbake brutzelboy brutzelboy-swupdate brutzelboy-swupdate-full
