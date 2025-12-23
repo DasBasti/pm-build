@@ -22,14 +22,6 @@ jobs:
         with:
           python-version: '3.x'
 
-      - name: Cache apt packages
-        uses: actions/cache@v4
-        with:
-          path: /var/cache/apt/archives
-          key: ${{ runner.os }}-apt-${{ hashFiles('**/lint.yml') }}
-          restore-keys: |
-            ${{ runner.os }}-apt-
-
       - name: Install system dependencies
         run: |
           sudo apt-get update
