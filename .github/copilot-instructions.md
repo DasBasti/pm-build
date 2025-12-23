@@ -17,8 +17,8 @@ This document provides essential information for efficient development in this r
 ```
 pm-build/
 ├── .github/
-│   ├── workflows/build.yml     # CI: pre-commit checks on push/PR to main
-│   └── scripts/                # CI helper scripts (oelint-check.sh)
+│   ├── workflows/lint.yml      # CI: pre-commit checks + bitbake parser check
+│   └── scripts/                # CI helper scripts (oelint-check.sh, build.sh)
 ├── .pre-commit-config.yaml     # Pre-commit hook configuration
 ├── .oelint-adv/soc-families.json  # OE linter custom SOC families
 ├── init-build-env              # Main environment setup script (source this!)
@@ -26,6 +26,8 @@ pm-build/
 ├── meta-platinenmacher/        # Common distro layer (PRIORITY: 99)
 │   ├── conf/distro/platinenmacher-linux.conf  # Distro configuration
 │   ├── conf/layer.conf         # Layer metadata
+│   ├── conf/templates/pm-linux/  # Template configuration
+│   ├── bin/run-oelint.sh       # OE linter helper script
 │   ├── recipes-images/         # Image recipes (brutzelboy, swupdate)
 │   ├── recipes-core/           # System services (persist-config, resize-userdata)
 │   ├── recipes-support/        # Support packages (swupdate components)
@@ -34,7 +36,7 @@ pm-build/
 ├── meta-pm-thebrutzler/        # Hardware-specific BSP layer (PRIORITY: 99)
 │   ├── conf/machine/thebrutzler_v2.conf  # Machine definition
 │   ├── recipes-bsp/rkbin/      # Rockchip binary packages
-│   ├── recipes-kenel/linux/    # Kernel customizations (NOTE: typo in folder name)
+│   ├── recipes-kernel/linux/   # Kernel customizations
 │   └── bin/flash-bmap          # Flashing utility
 ├── bitbake/                    # BitBake submodule
 └── bitbake-builds/
@@ -65,9 +67,11 @@ pre-commit run --all-files
 
 ### GitHub Actions CI
 
-The `build.yml` workflow runs on push/PR to `main`:
+The `lint.yml` workflow runs on push/PR to `main`:
 - Checks out with `submodules: recursive`
+- Installs system dependencies (chrpath, diffstat)
 - Runs `pre-commit run --all-files`
+- Runs BitBake parser check (`bitbake -p check`)
 
 **Validation before PR:**
 ```bash
@@ -89,7 +93,7 @@ pre-commit run --all-files
 Location by type:
 - **Images**: `meta-platinenmacher/recipes-images/images/`
 - **Core services**: `meta-platinenmacher/recipes-core/`
-- **BSP/kernel**: `meta-pm-thebrutzler/recipes-kenel/linux/` (note typo: "kenel")
+- **BSP/kernel**: `meta-pm-thebrutzler/recipes-kernel/linux/`
 - **Benchmark**: `meta-platinenmacher/recipes-benchmark/`
 
 ### OE Linter Configuration
@@ -140,7 +144,7 @@ bitbake-layers show-recipes
    git clone --recursive <repo-url>
    ```
 
-2. **Recipe typo**: The kernel recipes are in `recipes-kenel/` (not `recipes-kernel/`). Do NOT rename this folder as it would break existing configurations.
+2. **Environment setup**: Use `source init-build-env` to set up the build environment. Use `--install` flag to auto-install buildtools if needed.
 
 3. **Layer priority**: Both custom layers have priority 99 (highest wins for same recipe).
 
