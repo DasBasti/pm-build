@@ -3,7 +3,7 @@ DESCRIPTION = "SWUpdate package containing rootfs and bootloader for A/B updates
 LICENSE = "MIT"
 LIC_FILES_CHKSUM = "file://${COMMON_LICENSE_DIR}/MIT;md5=0835ade698e0bcf8506ecda2f7b4f302"
 
-inherit swupdate
+require brutzelboy-swupdate.inc
 
 SRC_URI = "\
     file://sw-description-full \
@@ -13,13 +13,10 @@ SRC_URI = "\
 S = "${UNPACKDIR}"
 
 # This image depends on the actual rootfs image and u-boot
-IMAGE_DEPENDS = "brutzelboy virtual/bootloader"
+IMAGE_DEPENDS:append = " virtual/bootloader"
 
 # Specify which images to include in the SWU file
-SWUPDATE_IMAGES = "brutzelboy idbloader.img u-boot.itb"
-
-# Specify the filesystem type for rootfs
-SWUPDATE_IMAGES_FSTYPES[brutzelboy] = ".rootfs.ext4"
+SWUPDATE_IMAGES:append = " idbloader.img u-boot.itb"
 
 # Get bootloader version from U-Boot recipe
 BOOTLOADER_VERSION ??= "2025.01"
