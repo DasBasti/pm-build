@@ -51,6 +51,10 @@ jobs:
       - name: Run pre-commit
         run: pre-commit run --all-files
 
+      - name: Enable user namespaces
+        run: |
+          sudo sysctl -w kernel.apparmor_restrict_unprivileged_userns=0
+
       - name: Run parser check
         run: |
           source init-build-env --install
