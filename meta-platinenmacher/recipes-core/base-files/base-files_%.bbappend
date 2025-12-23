@@ -1,6 +1,9 @@
 FILESEXTRAPATHS:prepend := "${THISDIR}/${PN}:"
 
-SRC_URI += "file://home.mount"
+SRC_URI += "\
+    file://home.mount \
+    file://motd \
+"
 
 inherit systemd
 
