@@ -4,6 +4,20 @@ SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 PROJECT_ROOT="$SCRIPT_DIR"
 export PROJECT_ROOT
 
+TEMPLATECONF="$SCRIPT_DIR/meta-platinenmacher/conf/templates/pm-linux"
+export TEMPLATECONF
+
+# Parse command line arguments
+INSTALL_BUILDTOOLS_AUTO=false
+for arg in "$@"; do
+  case $arg in
+    --install)
+      INSTALL_BUILDTOOLS_AUTO=true
+      shift
+      ;;
+  esac
+done
+
 # Source build environment scripts directly (no safeguards)
 if [ -f "$PROJECT_ROOT/bitbake-builds/poky-whinlatter/build/init-build-env" ]; then
   . "$PROJECT_ROOT/bitbake-builds/poky-whinlatter/build/init-build-env"
@@ -11,10 +25,37 @@ else
   echo "Warning: init-build-env not found at $PROJECT_ROOT/bitbake-builds/poky-whinlatter/build/init-build-env" >&2
 fi
 
-if [ -f "$PROJECT_ROOT/bitbake-builds/poky-whinlatter/buildtools/environment-setup-x86_64-pokysdk-linux" ]; then
-  . "$PROJECT_ROOT/bitbake-builds/poky-whinlatter/buildtools/environment-setup-x86_64-pokysdk-linux"
+BUILDTOOLS_ENV="$PROJECT_ROOT/bitbake-builds/poky-whinlatter/buildtools/environment-setup-x86_64-pokysdk-linux"
+if [ -f "$BUILDTOOLS_ENV" ]; then
+  . "$BUILDTOOLS_ENV"
 else
-  echo "Warning: environment-setup script not found at $PROJECT_ROOT/bitbake-builds/poky-whinlatter/buildtools/environment-setup-x86_64-pokysdk-linux" >&2
+  echo "Warning: environment-setup script not found at $BUILDTOOLS_ENV" >&2
+
+  # Check if we should install buildtools
+  SHOULD_INSTALL=false
+  if [ "$INSTALL_BUILDTOOLS_AUTO" = true ]; then
+    SHOULD_INSTALL=true
+    echo "Auto-installing buildtools..."
+  else
+    read -p "Would you like to install buildtools now? (y/n): " -n 1 -r
+    echo
+    if [[ $REPLY =~ ^[Yy]$ ]]; then
+      SHOULD_INSTALL=true
+    fi
+  fi
+
+  if [ "$SHOULD_INSTALL" = true ]; then
+    echo "Installing buildtools..."
+    bitbake-setup install-buildtools
+
+    # Try to source the environment-setup script after installation
+    if [ -f "$BUILDTOOLS_ENV" ]; then
+      . "$BUILDTOOLS_ENV"
+      echo "Buildtools installed and environment configured successfully."
+    else
+      echo "Error: Buildtools installation may have failed. Environment setup script still not found." >&2
+    fi
+  fi
 fi
 
 PATH="$PROJECT_ROOT/meta-pm-thebrutzler/bin:$PATH"
