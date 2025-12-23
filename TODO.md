@@ -44,7 +44,7 @@
 - LED
   - [x] Heartbeat
 - Buttons
-  - [ ] Reset -> Does not work!
+  - [x] Reset -> Wire R117 -> C34 to connect reset circuits
   - [x] SARADC Ch0 -> Pressed < 20 not pressed 1023
   - [ ] Power On
 - Camera
