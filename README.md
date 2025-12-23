@@ -192,7 +192,7 @@ Common Platinenmacher layer with:
 - **SoC Family**: Rockchip RK3566/RK3568
 - **Kernel**: linux-yocto-dev
 - **U-Boot**: `lckfb-tspi-rk3566_defconfig`
-- **Device Tree**: `meta-pm-thebrutzler/recipes-kenel/linux/files/lcsc-taishanpi-rk3566.dts`
+- **Device Tree**: `meta-pm-thebrutzler/recipes-kernel/linux/files/lcsc-taishanpi-rk3566.dts`
 - **Kernel Image**: FIT image with artifacts
 
 ### Layer Compatibility
@@ -206,7 +206,7 @@ Common Platinenmacher layer with:
 3. Add to `IMAGE_INSTALL` in image recipe if needed
 
 ### Modifying Kernel
-Kernel recipes are located in `meta-pm-thebrutzler/recipes-kenel/linux/`
+Kernel recipes are located in `meta-pm-thebrutzler/recipes-kernel/linux/`
 ```bash
 # After modifying kernel config
 bitbake virtual/kernel -c menuconfig
@@ -214,7 +214,7 @@ bitbake virtual/kernel -c savedefconfig
 ```
 
 ### Updating Device Tree
-Device tree files are located in `meta-pm-thebrutzler/recipes-kenel/linux/files/lcsc-taishanpi-rk3566.dts` and set in machine config:
+Device tree files are located in `meta-pm-thebrutzler/recipes-kernel/linux/files/lcsc-taishanpi-rk3566.dts` and set in machine config:
 ```bash
 KERNEL_DEVICETREE = "rockchip/lcsc-taishanpi-rk3566.dtb"
 ```
