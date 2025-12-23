@@ -15,7 +15,5 @@
 **/build/*.log
 
 #Ignore any buildtools downloads
-**/buildtools/sysroots
-**/buildtools/environment*
-**/buildtools-downloads/**/*.sh
-**/buildtools-downloads/**/*.sh.sha256sum
+**/buildtools/
+**/buildtools-downloads/
