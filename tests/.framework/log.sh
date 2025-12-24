@@ -10,15 +10,11 @@ log_info() {
 }
 
 log_warning() {
-    if [ "$VERBOSE" = true ]; then
-        echo -e "${COLOR_YELLOW}$@${COLOR_RESET}"
-    fi
+    echo -e "${COLOR_YELLOW}$@${COLOR_RESET}"
 }
 
 log_error() {
-    if [ "$VERBOSE" = true ]; then
-        echo -e "${COLOR_RED}$@${COLOR_RESET}"
-    fi
+    echo -e "${COLOR_RED}$@${COLOR_RESET}"
 }
 
 log_console() {

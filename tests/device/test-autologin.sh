@@ -11,6 +11,7 @@ test_serial_connection_parameter() {
 
     [ -z "$BAUD" ] && { log_error "BAUD variable not set"; fail; }
 
+    pass
 }
 
 test_autologin() {
