@@ -16,9 +16,10 @@ test_machine_has_images() {
 }
 
 test_rootfs_artifacts_exists() {
-    expect "to have rootfs tar, and wic image for a default image."
+    expect "to have rootfs tar, and wic and wic.zip image for a default image."
     ls $DEPLOY_DIR/images/$MACHINE/*.tar
     ls $DEPLOY_DIR/images/$MACHINE/*.wic
+    ls $DEPLOY_DIR/images/$MACHINE/*.wic.zip
 
     pass
 }
