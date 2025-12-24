@@ -1,0 +1,8 @@
+# USB Automount udev rules
+# Trigger systemd service when USB storage devices are added/removed
+
+# Match USB storage devices (block devices on USB bus with filesystem)
+ACTION=="add", KERNEL=="sd*", SUBSYSTEM=="block", ENV{ID_BUS}=="usb", ENV{ID_FS_USAGE}=="filesystem", TAG+="systemd", ENV{SYSTEMD_WANTS}+="usb-automount@%k.service"
+
+# Cleanup on remove
+ACTION=="remove", KERNEL=="sd*", SUBSYSTEM=="block", ENV{ID_BUS}=="usb", TAG+="systemd"
