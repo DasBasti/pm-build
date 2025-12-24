@@ -1,0 +1,2 @@
+# ThebrutzlerV2 board support
+include cfg/iwd.scc

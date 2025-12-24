@@ -1,0 +1,6 @@
+define KMACHINE thebrutzler-v2
+define KTYPE standard
+define KARCH arm64
+
+include bsp/rockchip/remove-non-rockchip-arch-arm64.scc
+include bsp/thebrutzler/thebrutzler.scc

@@ -5,7 +5,7 @@ FILESEXTRAPATHS:prepend := "${THISDIR}/${PN}:"
 
 SRC_URI += "file://main.conf"
 
-# Use iwd instead of wpa-supplicant for better reliability and ConnMan integration
+# Use iwd instead of wpa-supplicant
 PACKAGECONFIG:append = " wifi iwd"
 PACKAGECONFIG:remove = "wpa-supplicant"
 

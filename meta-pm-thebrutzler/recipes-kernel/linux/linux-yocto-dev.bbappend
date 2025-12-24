@@ -1,6 +1,8 @@
 COMPATIBLE_MACHINE:thebrutzler-v2 = "thebrutzler-v2"
 FILESEXTRAPATHS:prepend := "${THISDIR}/files:"
 
+KMACHINE:thebrutzler-v2 = "thebrutzler-v2"
+
 SRC_URI:append:thebrutzler-v2 = "\
     file://rockchip-kmeta;type=kmeta;name=rockchip-kmeta;destsuffix=rockchip-kmeta \
     file://lcsc-taishanpi-rk3566.dts;subdir=dts-files \
