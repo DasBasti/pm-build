@@ -25,8 +25,9 @@
 - [ ] eMMC (&mmc1 = &sdhci init failed)
 - [x] WiFi-Module (&mmc2 = &sdmmc1)
   - [x] Scan Signals
-  - [ ] connman
-  - [ ] working connection
+  - [x] connman
+  - [x] working connection
+  - [ ] initial tethering for setup
 - [x] Bluetooth-Module (&uart1)
 - [ ] HDMI
   - [x] Connector
