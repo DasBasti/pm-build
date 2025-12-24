@@ -24,7 +24,9 @@
 - [x] SD-Card (&mmc0 = &sdmmc0)
 - [ ] eMMC (&mmc1 = &sdhci init failed)
 - [x] WiFi-Module (&mmc2 = &sdmmc1)
-  - [ ] No Signals -> Maybe needs an antenna?
+  - [x] Scan Signals
+  - [ ] connman
+  - [ ] working connection
 - [x] Bluetooth-Module (&uart1)
 - [ ] HDMI
   - [x] Connector
