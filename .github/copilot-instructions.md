@@ -174,6 +174,9 @@ git status
 
 # Check submodule status
 git submodule status
+
+# Connect to the DUTs console
+ssh root@thebrutzlerv2.local
 ```
 
 ## Trust These Instructions
