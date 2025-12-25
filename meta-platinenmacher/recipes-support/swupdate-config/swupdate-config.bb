@@ -6,6 +6,7 @@ LIC_FILES_CHKSUM = "file://${COMMON_LICENSE_DIR}/MIT;md5=0835ade698e0bcf8506ecda
 SRC_URI = "\
     file://swupdate.cfg \
     file://detect-rootfs.sh \
+    file://00-detect-rootfs \
 "
 
 inherit allarch
@@ -20,9 +21,11 @@ do_install() {
 
     install -d ${D}${sbindir}
     install -m 0755 ${UNPACKDIR}/detect-rootfs.sh ${D}${sbindir}/detect-rootfs
+    install -m 0755 ${UNPACKDIR}/00-detect-rootfs ${D}${sbindir}/swupdate-detect-rootfs
 }
 
 FILES:${PN} = "\
     ${sysconfdir}/swupdate/swupdate.cfg \
     ${sbindir}/detect-rootfs \
+    ${sbindir}/swupdate-detect-rootfs \
 "

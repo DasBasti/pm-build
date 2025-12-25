@@ -1,0 +1,21 @@
+#!/bin/sh
+# Detect current rootfs and set it in u-boot environment
+# This runs as ExecStartPre before swupdate starts to ensure proper A/B selection
+
+CURRENT_ROOTFS=$(/usr/sbin/detect-rootfs)
+
+if [ $? -ne 0 ] || [ -z "$CURRENT_ROOTFS" ]; then
+    echo "Error: Failed to detect current rootfs partition"
+    exit 1
+fi
+
+echo "Detected current rootfs: $CURRENT_ROOTFS"
+
+# Set the rootfs_part variable in u-boot environment
+if ! fw_setenv rootfs_part "$CURRENT_ROOTFS"; then
+    echo "Error: Failed to set rootfs_part in u-boot environment"
+    exit 1
+fi
+
+echo "Successfully set rootfs_part=$CURRENT_ROOTFS in u-boot environment"
+exit 0

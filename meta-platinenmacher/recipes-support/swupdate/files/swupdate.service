@@ -5,6 +5,7 @@ Documentation=https://sbabic.github.io/swupdate
 
 [Service]
 Type=simple
+ExecStartPre=/usr/sbin/swupdate-detect-rootfs
 ExecStart=@LIBDIR@/swupdate/swupdate.sh
 KillMode=mixed
 
