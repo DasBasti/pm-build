@@ -5,6 +5,11 @@
 - [x] Create fitImage
 - [ ] Limit access to u-boot environment
 - [ ] Run fsck automatically during boot
+- [ ] Setup global keys recipe in meta-platinenmacher for
+  - [ ] Rootca and derived keys for
+  - [ ] fitImages
+  - [ ] swupdate
+  - [ ] Secureboot
 
 ## Devicetree nodes
 - [x] Add dedicated device tree for PCB
@@ -62,15 +67,41 @@
   - [x] RK809 in
   - [x] RK809 out
 
-## Partition schema
+## Updates
 - [x] add secondary rootfs partition
 - [x] create swupdate sw-description file
 - [x] create resize-userdata service for persistent /home
 - [ ] provide swupdate server
-- [ ] make swu installable
-  - [ ] make u-boot use the environment partition
-  - [ ] modifyable u-boot environment from userspace
-  - [ ] a/b image mechanism works as expected
+- [X] make swu installable
+  - [x] make u-boot use the environment partition
+  - [x] modifyable u-boot environment from userspace
+  - [X] Board, type and copy are detected
+- [ ] New A/B-Boot mechanism
+  - [x] Create a single boot partition size it to easily fit two kernels (in-progress: FAT 512M)
+  - [x] Build fitImage with kernel and devicetree. (in-progress)
+  - [x] Deploy the fitImage instead of kernel and devicetree to the boot partition (installed as `fitImage-A` / `fitImage-B` via image postprocessing)
+  - [x] Deploy extlinux.conf to the boot partition (extlinux.conf now contains `A`/`B` labels; default = A)
+  - [x] Have uboot boot fitImage A or B from the boot partition (extlinux labels created)
+  - [ ] update swupdate sw-descriptions to support switching to the image that got target. (in-progress)
+- [ ] Updates work
+  - [ ] a/b image mechanism works as expected. bootflow cannot see mmcblk0p10 as boot target even with image on it
+  - [ ] test full update file
+  - [ ] use links in fullupdate file to have only one bootloader block
+  - [ ] think about location for copy version detection for A/B image (info should be part of bsp, script part of distro)
+  - [ ] restart after update does not work as expected
+- [ ] Rescue to start once we hit 3 failed start attempts and fallback did not work
+  - [ ] include rescue in initramfs-image
+  - [ ] ship initramfs-image for rescue as artifact in regualar image
+  - [ ] update if rescue image changed (newer image was successfully booted)
+
+## Housekeeping
+- [ ] sort out swupdate recipe splits in meta-platinenmacher and meta-pm-thebrutzler
+- [ ] rename brutzelboy to pmlinux
+- [ ] validat that dtb and initramfs is loaded from fitImage
+
+## Config persistence
+- [ ] Check save of config on reboot
+- [ ] remove wpa_supplicant form config list
 
 ## User
 - [x] Add user thebrutzler

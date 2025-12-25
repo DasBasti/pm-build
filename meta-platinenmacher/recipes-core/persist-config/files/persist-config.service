@@ -1,6 +1,7 @@
 [Unit]
 Description=Persist system configuration to userdata partition
 After=multi-user.target
+Before=umount.target
 
 [Service]
 Type=oneshot
@@ -8,4 +9,4 @@ ExecStart=/usr/sbin/persist-config.sh
 StandardOutput=journal
 
 [Install]
-WantedBy=multi-user.target
+WantedBy=shutdown.target

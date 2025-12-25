@@ -49,6 +49,42 @@ pm-build/
 
 ## Code Quality & CI
 
+### Build on local host
+If you are not working on a cloud instance but on a locally running vscode instance, you can make use of
+the build script located in the project root. It builds an image and the swu update file. Simply execute
+the script without parameters from the project root and wait for it to finish.
+The build **can** take several minutes.
+
+```bash
+./build.sh
+```
+
+### Test Scripts
+There are test scripts located in the `tests` folder. The tests scripts are seperated into two categories.
+Tests that are for runnig on the build host are located in `tests/images` and tests that run on the target are
+located in `tests/device`. Whenever changes are made that can be validated on the host (like new files in the
+deploy folder or content of archives/image files) add tests to the images section.
+
+```bash
+# run all tests
+./tests/run-tests.sh
+
+# run tests for images
+./tests/run-tests.sh images
+
+#run tests for the device
+./tests/run-tests.sh device
+```
+
+**Test on device / target**
+To run tests on the device the software to test needs to be installed manually, so it cannot be done automatically.
+So use only image tests for now.
+
+**Create new tests**
+Use `test_deploydir_exists` from `tests/images/test-artifact-existence.sh` as an example on how to build a testcase.
+If you create helper functions you can add them to one of the files in `tests/.framework` or add another file if no
+matching file exists.
+
 ### Pre-commit Hooks (Required)
 
 Always run before committing:
@@ -80,6 +116,10 @@ pre-commit run --all-files
 ```
 
 ## Working with Yocto Recipes
+
+### Validation
+Do not run bitbake directly, always use the `build.sh` script in the project root.
+To check if the changes you made are passing the parse sate, run `./script.sh validate`.
 
 ### Recipe File Conventions
 

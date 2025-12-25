@@ -1,15 +1,18 @@
 #!/bin/bash
-# Detect current rootfs partition from mount point
-# Returns: rootfsA or rootfsB
+# Detect current rootfs partition label
+# Returns: copyA or copyB
+
+set -euo pipefail
 
 CURRENT_ROOT=$(findmnt -n -o SOURCE /)
+LABEL=$(blkid -s PARTLABEL -o value "$CURRENT_ROOT")
 
-case "$CURRENT_ROOT" in
-    */mmcblk0p9|*rootfsA)
-        echo "rootfsA"
+case "$LABEL" in
+    rootfsA)
+        echo "copyA"
         ;;
-    */mmcblk0p10|*rootfsB)
-        echo "rootfsB"
+    rootfsB)
+        echo "copyB"
         ;;
     *)
         echo "unknown"

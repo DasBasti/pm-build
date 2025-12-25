@@ -2,11 +2,10 @@ software =
 {
     version = "@@DISTRO_VERSION@@";
 
-    thebrutzler-v2 = {
+    thebrutzler_v2 = {
         hardware-compatibility: [ "2.0" ];
-
         stable = {
-            copy1 : {
+            copyA : {
                 images: (
                     {
                         filename = "brutzelboy-thebrutzler_v2.rootfs.ext4";
@@ -48,7 +47,7 @@ software =
                 );
             };
 
-            copy2 : {
+            copyB : {
                 images: (
                     {
                         filename = "brutzelboy-thebrutzler_v2.rootfs.ext4";

@@ -1,9 +1,6 @@
 #!/usr/bin/env bash
 set -euo pipefail
 
-# grep meta-platinenmacher/conf/distro/platinenmacher-linux.conf for the string
-# DISTRO_VERSION = "[YYYY).(MM).(P)-poky-${POKY_VERSION}"
-
 # Regex to match and extract year, month, and patch from the version string
 version_regex='^([0-9]{4})\.([0-9]{2})\.([0-9]+)(.*)'
 
@@ -63,5 +60,19 @@ sed -i -E '0,/^[[:space:]]*DISTRO_VERSION[[:space:]]*=/{s/^[[:space:]]*(DISTRO_V
 
 echo "Updated $CONF"
 
+# Replace the PV value in meta-platinenmacher/recipes-images/images/brutzelboy.inc
+INC_FILE="meta-platinenmacher/recipes-images/images/brutzelboy.inc"
+
+if [[ ! -f "$INC_FILE" ]]; then
+    echo "Error: $INC_FILE not found" >&2
+    exit 1
+fi
+
+# Replace the PV value in place, keeping surrounding formatting intact
+sed -i -E '0,/^[[:space:]]*PV[[:space:]]*=/{s/^[[:space:]]*(PV[[:space:]]*=[[:space:]]*")(.*?)(".*)/\1'"${year}.${month}.${patch}"'\3/}' "$INC_FILE"
+
+echo "Updated $INC_FILE"
+
 # Show the modified line for verification
 grep -E "^\s*DISTRO_VERSION\s*=" "$CONF" || true
+grep -E "^\s*PV\s*=" "$INC_FILE" || true
