@@ -1,0 +1,3 @@
+# SWUpdate signing configuration
+# Specify the public key for RSA signature verification
+SWUPDATE_ARGS="${SWUPDATE_ARGS} -k /etc/swupdate/certs/swupdate.pem"

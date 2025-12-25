@@ -10,8 +10,11 @@ part reserved2 --offset 8192s  --fixed-size 4096K --fstype=none --part-name rese
 part loader2   --offset 16384s --fixed-size 4096K --fstype=none --part-name loader2   --source rawcopy --sourceparams="file=u-boot.${UBOOT_SUFFIX}"
 part atf       --offset 24576s --fixed-size 4096K --fstype=none --part-name atf
 
+# Boot partition for FIT images and extlinux (A/B). FAT to be compatible with U-Boot.
+part /boot --source bootimg_partition --fstype=vfat --label boot --part-name boot --active --fixed-size 512M --sourceparams="loader=u-boot"
+
 # Root filesystem A (active) - 2GB size
-part /         --label rootfsA --active           --fstype=ext4 --part-name rootfsA   --source rootfs  --fixed-size 2048M --part-type ${ROOT_DPS}
+part /         --label rootfsA            --fstype=ext4 --part-name rootfsA   --source rootfs  --fixed-size 2048M --part-type ${ROOT_DPS}
 # Root filesystem B (inactive, empty partition for updates) - 2GB size
 # Do not specify mount point - swupdate will handle mounting for updates
 part           --label rootfsB                    --fstype=ext4 --part-name rootfsB   --fixed-size 2048M --part-type ${ROOT_DPS}
@@ -19,4 +22,4 @@ part           --label rootfsB                    --fstype=ext4 --part-name root
 # Mount via systemd unit with PARTLABEL instead of WKS auto-mount
 part           --label userdata                   --fstype=ext4 --part-name userdata  --fixed-size 256M  --part-type ${ROOT_DPS}
 
-bootloader --ptable gpt
+bootloader --ptable gpt --configfile="extlinux-ab.conf"

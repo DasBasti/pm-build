@@ -1,0 +1,11 @@
+[Unit]
+Description=Mark boot as successful in U-Boot environment
+After=local-fs.target
+
+[Service]
+Type=oneshot
+ExecStart=/usr/libexec/fw-mark-boot-good.sh
+RemainAfterExit=yes
+
+[Install]
+WantedBy=multi-user.target

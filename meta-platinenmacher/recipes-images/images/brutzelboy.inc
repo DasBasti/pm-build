@@ -4,6 +4,7 @@ inherit core-image
 IMAGE_ROOTFS_SIZE ?= "8192"
 IMAGE_ROOTFS_EXTRA_SPACE:append = " ${@bb.utils.contains("DISTRO_FEATURES", "systemd", " + 4096", "", d)}"
 
+PV = "2025.12.2"
 
 IMAGE_INSTALL:append = " \
     resize-userdata \
@@ -26,14 +27,11 @@ IMAGE_INSTALL:append = " \
     swupdate \
     swupdate-www \
     swupdate-usb \
+    swupdate-key \
     libubootenv-bin \
     swupdate-hw-compatibility \
-    swupdate-bootloader-version \
     swupdate-config \
 "
-
-# Use custom WKS file for A/B partitioning
-WKS_FILE = "platinenmacher-ab.wks"
 
 # Generate ext4 image for swupdate packages
 IMAGE_FSTYPES += "ext4 wic.zip"

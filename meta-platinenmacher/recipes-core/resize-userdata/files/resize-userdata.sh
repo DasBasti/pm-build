@@ -38,15 +38,9 @@ else
 fi
 
 # Extract device and partition number
-# Handle both /dev/sdX3 and /dev/mmcblk0p3 formats
-if [[ "$USERDATA_PART" =~ ^/dev/mmcblk[0-9]+ ]]; then
-    # MMC/SD card format: /dev/mmcblk0p11
+if [[ "$USERDATA_PART" =~ ^/dev/mmcblk0p[0-9]+ ]]; then
     DEVICE=$(echo "$USERDATA_PART" | sed 's/p[0-9]\+$//')
     PARTNUM=$(echo "$USERDATA_PART" | sed 's/.*p\([0-9]\+\)$/\1/')
-elif [[ "$USERDATA_PART" =~ ^/dev/[a-z]+[0-9]+$ ]]; then
-    # Standard disk format: /dev/sda3
-    DEVICE=$(echo "$USERDATA_PART" | sed 's/[0-9]\+$//')
-    PARTNUM=$(echo "$USERDATA_PART" | sed 's/.*[^0-9]\([0-9]\+\)$/\1/')
 else
     echo "ERROR: Unable to parse device and partition number from $USERDATA_PART"
     exit 1

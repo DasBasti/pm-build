@@ -2,11 +2,10 @@ software =
 {
     version = "@@DISTRO_VERSION@@";
 
-    thebrutzler-v2 = {
+    thebrutzler_v2 = {
         hardware-compatibility: [ "2.0" ];
-
         stable = {
-            copy1 : {
+            copyA : {
                 images: (
                     {
                         filename = "brutzelboy-thebrutzler_v2.rootfs.ext4";
@@ -29,6 +28,13 @@ software =
                         sha256 = "$swupdate_get_sha256(u-boot.itb)";
                         hook = "check_bootloader_version";
                         installed-directly = true;
+                    },
+                    {
+                        filename = "fitImage";
+                        device = "/dev/disk/by-label/boot";
+                        type = "raw";
+                        sha256 = "$swupdate_get_sha256(fitImage)";
+                        hook = "install_fitimage";
                     }
                 );
 
@@ -48,7 +54,7 @@ software =
                 );
             };
 
-            copy2 : {
+            copyB : {
                 images: (
                     {
                         filename = "brutzelboy-thebrutzler_v2.rootfs.ext4";
@@ -71,6 +77,13 @@ software =
                         sha256 = "$swupdate_get_sha256(u-boot.itb)";
                         hook = "check_bootloader_version";
                         installed-directly = true;
+                    },
+                    {
+                        filename = "fitImage";
+                        device = "/dev/disk/by-label/boot";
+                        type = "raw";
+                        sha256 = "$swupdate_get_sha256(fitImage)";
+                        hook = "install_fitimage";
                     }
                 );
 

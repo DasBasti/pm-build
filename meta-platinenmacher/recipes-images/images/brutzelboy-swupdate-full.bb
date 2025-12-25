@@ -8,6 +8,7 @@ require brutzelboy-swupdate.inc
 SRC_URI = "\
     file://sw-description-full \
     file://check-bootloader-version.lua \
+    file://install-fitimage.lua \
 "
 
 S = "${UNPACKDIR}"
@@ -16,7 +17,8 @@ S = "${UNPACKDIR}"
 IMAGE_DEPENDS:append = " virtual/bootloader"
 
 # Specify which images to include in the SWU file
-SWUPDATE_IMAGES:append = " idbloader.img u-boot.itb"
+# Include the kernel FIT image so SWUpdate can deliver FITs for bootloader updates
+SWUPDATE_IMAGES:append = " idbloader.img u-boot.itb fitImage"
 
 # Get bootloader version from U-Boot recipe
 BOOTLOADER_VERSION ??= "2025.01"

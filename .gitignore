@@ -7,6 +7,7 @@
 !.github
 !.oelint-adv
 !.pre-commit-config.yaml
+!tests/.framework
 
 # Ignore any bitbake build directories and their contents anywhere in the repo
 **/build/tmp
