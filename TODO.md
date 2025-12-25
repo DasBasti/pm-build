@@ -3,6 +3,8 @@
 ## General functions
 - [x] Update motd
 - [x] Create fitImage
+- [ ] Limit access to u-boot environment
+- [ ] Run fsck automatically during boot
 
 ## Devicetree nodes
 - [x] Add dedicated device tree for PCB
@@ -27,6 +29,7 @@
   - [x] Scan Signals
   - [x] connman
   - [x] working connection
+  - [x] wpa_supplicant needs to be removed
   - [ ] initial tethering for setup
 - [x] Bluetooth-Module (&uart1)
 - [ ] HDMI
@@ -64,6 +67,10 @@
 - [x] create swupdate sw-description file
 - [x] create resize-userdata service for persistent /home
 - [ ] provide swupdate server
+- [ ] make swu installable
+  - [ ] make u-boot use the environment partition
+  - [ ] modifyable u-boot environment from userspace
+  - [ ] a/b image mechanism works as expected
 
 ## User
 - [x] Add user thebrutzler
