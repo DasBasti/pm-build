@@ -44,6 +44,7 @@ pm-build/
         ├── build/conf/         # Build configuration (local.conf, bblayers.conf)
         ├── buildtools/         # SDK tools
         └── layers/             # Upstream Yocto layers (submodules)
+└── Documentation               # Update these files whenever you cange something in the subsystem
 ```
 
 ## Code Quality & CI
@@ -146,7 +147,7 @@ bitbake-layers show-recipes
 
 2. **Environment setup**: Use `source init-build-env` to set up the build environment. Use `--install` flag to auto-install buildtools if needed.
 
-3. **Layer priority**: Both custom layers have priority 99 (highest wins for same recipe).
+3. **Layer priority**: Both custom layers have high priority, meta-platinenmacher has 90, the bsp in meta-pm-thebrutzler has 99 (highest wins for same recipe).
 
 4. **Kernel class**: Uses `kernel-fit-extra-artifacts` (not the older `kernel-fitimage`).
 
