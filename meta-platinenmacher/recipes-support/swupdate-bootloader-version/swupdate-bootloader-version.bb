@@ -6,7 +6,6 @@ LIC_FILES_CHKSUM = "file://${COMMON_LICENSE_DIR}/MIT;md5=0835ade698e0bcf8506ecda
 SRC_URI = "\
     file://swupdate-set-bootenv.sh \
     file://swupdate-bootenv.service \
-    file://fw_env.config \
 "
 
 S = "${UNPACKDIR}"
@@ -19,15 +18,12 @@ SYSTEMD_AUTO_ENABLE = "enable"
 # Get version from U-Boot - use a default if not available
 BOOTLOADER_VERSION ??= "2025.01"
 
-RDEPENDS:${PN} = "libubootenv-bin bash"
+RDEPENDS:${PN} = "libubootenv-bin bash u-boot-env"
 
 do_install() {
     # Install bootloader version file
     install -d ${D}${sysconfdir}
     echo "${BOOTLOADER_VERSION}" > ${D}${sysconfdir}/bootloader-version
-
-    # Install fw_env.config for U-Boot environment access
-    install -m 0644 ${S}/fw_env.config ${D}${sysconfdir}/fw_env.config
 
     # Install script
     install -d ${D}${sbindir}
@@ -40,7 +36,6 @@ do_install() {
 
 FILES:${PN} = "\
     ${sysconfdir}/bootloader-version \
-    ${sysconfdir}/fw_env.config \
     ${sbindir}/swupdate-set-bootenv.sh \
     ${systemd_system_unitdir}/swupdate-bootenv.service \
 "
