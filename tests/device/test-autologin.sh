@@ -1,6 +1,6 @@
 #!/bin/false
 
-test_serial_connection_parameter() {
+test_00_serial_connection_parameter() {
     expect "Environment has SERIAL and BAUD set"
     # Check if serial device exists
     [ -z "$SERIAL" ] && { log_error "SERIAL variable not set"; fail; }
@@ -14,7 +14,7 @@ test_serial_connection_parameter() {
     pass
 }
 
-test_autologin() {
+test_01_autologin() {
     expect "to open the console and be logged in as thebrutzler"
 
     # Configure serial port

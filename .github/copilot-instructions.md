@@ -39,11 +39,16 @@ pm-build/
 │   ├── recipes-kernel/linux/   # Kernel customizations
 │   └── bin/flash-bmap          # Flashing utility
 ├── bitbake/                    # BitBake submodule
-└── bitbake-builds/
-    └── poky-whinlatter/
-        ├── build/conf/         # Build configuration (local.conf, bblayers.conf)
-        ├── buildtools/         # SDK tools
-        └── layers/             # Upstream Yocto layers (submodules)
+├── bitbake-builds/
+│   └── poky-whinlatter/
+│       ├── build/conf/         # Build configuration (local.conf, bblayers.conf)
+│       ├── buildtools/         # SDK tools
+│       └── layers/             # Upstream Yocto layers (submodules) DO NOT CHANGE FILES HERE!
+├── tests                       # Tests for build artifacts (images) and on the device (device)
+│   ├── .framework/             # Put new helper functions you need for tests here
+│   ├── device/                 # Put new tests for build artifacts here
+│   ├── images/                 # Put new tests that are executed on the device here
+│   └── run-tests.sh            # Execute the tests
 └── Documentation               # Update these files whenever you cange something in the subsystem
 ```
 
