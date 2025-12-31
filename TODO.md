@@ -41,13 +41,14 @@
   - [x] Connector
   - [x] Supplies
   - [x] Endpoints
-  - [ ] HPD -> Does not work!
+  - [x] HPD -> Remove Diodes on Data lines (wrong polarity)
   - [x] CEC
-  - [ ] DDC
+  - [x] DDC
   - [ ] Sound
+  - [ ] Parsing error in devicetree asoc-simple-card
 - [x] GPU
 - USB
-  - [ ] OTG (USB-C) -> Doesn't boot when connected to USB-C Port of PC
+  - [x] OTG
   - [x] Host1 (USB3.0 MB Connector)
   - [x] Host2 (USB-A)
 - [ ] MIPI DSI
@@ -105,6 +106,7 @@
 
 ## User
 - [x] Add user thebrutzler
+- [ ] Sudo not working for thebrutzler user
 
 ## GH Release
 - [x] upload an image to Github Release
