@@ -77,13 +77,13 @@
   - [x] make u-boot use the environment partition
   - [x] modifyable u-boot environment from userspace
   - [X] Board, type and copy are detected
-- [ ] New A/B-Boot mechanism
+- [x] New A/B-Boot mechanism
   - [x] Create a single boot partition size it to easily fit two kernels (in-progress: FAT 512M)
   - [x] Build fitImage with kernel and devicetree. (in-progress)
   - [x] Deploy the fitImage instead of kernel and devicetree to the boot partition (installed as `fitImage-A` / `fitImage-B` via image postprocessing)
   - [x] Deploy extlinux.conf to the boot partition (extlinux.conf now contains `A`/`B` labels; default = A)
   - [x] Have uboot boot fitImage A or B from the boot partition (extlinux labels created)
-  - [ ] update swupdate sw-descriptions to support switching to the image that got target. (in-progress)
+  - [x] update swupdate sw-descriptions to support switching to the image that got target. (in-progress)
 - [ ] Updates work
   - [ ] a/b image mechanism works as expected. bootflow cannot see mmcblk0p10 as boot target even with image on it
   - [ ] test full update file
