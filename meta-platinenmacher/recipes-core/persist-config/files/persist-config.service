@@ -1,12 +1,17 @@
 [Unit]
 Description=Persist system configuration to userdata partition
-After=multi-user.target
-Before=umount.target
+After=local-fs.target restore-config.service
+Wants=restore-config.service
 
 [Service]
-Type=oneshot
-ExecStart=/usr/sbin/persist-config.sh
+Type=simple
+ExecStart=/usr/sbin/persist-config.sh daemon
+ExecStop=/usr/sbin/persist-config.sh persist
+Restart=on-failure
+RestartSec=10
 StandardOutput=journal
+KillSignal=SIGTERM
+TimeoutStopSec=30
 
 [Install]
-WantedBy=shutdown.target
+WantedBy=multi-user.target

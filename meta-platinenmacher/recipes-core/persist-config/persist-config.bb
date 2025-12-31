@@ -4,9 +4,9 @@ LICENSE = "MIT"
 LIC_FILES_CHKSUM = "file://${COMMON_LICENSE_DIR}/MIT;md5=0835ade698e0bcf8506ecda2f7b4f302"
 
 SRC_URI = "\
+    file://persist-config.conf \
     file://persist-config.sh \
     file://persist-config.service \
-    file://restore-config.sh \
     file://restore-config.service \
 "
 
@@ -17,13 +17,16 @@ inherit systemd
 SYSTEMD_SERVICE:${PN} = "persist-config.service restore-config.service"
 SYSTEMD_AUTO_ENABLE = "enable"
 
-RDEPENDS:${PN} = "bash rsync"
+RDEPENDS:${PN} = "bash rsync coreutils"
 
 do_install() {
-    # Install scripts
+    # Install configuration file
+    install -d ${D}${sysconfdir}
+    install -m 0644 ${S}/persist-config.conf ${D}${sysconfdir}/
+
+    # Install script
     install -d ${D}${sbindir}
     install -m 0755 ${S}/persist-config.sh ${D}${sbindir}/
-    install -m 0755 ${S}/restore-config.sh ${D}${sbindir}/
 
     # Install systemd services
     install -d ${D}${systemd_system_unitdir}
@@ -32,8 +35,8 @@ do_install() {
 }
 
 FILES:${PN} = "\
+    ${sysconfdir}/persist-config.conf \
     ${sbindir}/persist-config.sh \
-    ${sbindir}/restore-config.sh \
     ${systemd_system_unitdir}/persist-config.service \
     ${systemd_system_unitdir}/restore-config.service \
 "

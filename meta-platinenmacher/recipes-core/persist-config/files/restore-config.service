@@ -6,7 +6,7 @@ DefaultDependencies=no
 
 [Service]
 Type=oneshot
-ExecStart=/usr/sbin/restore-config.sh
+ExecStart=/usr/sbin/persist-config.sh restore
 RemainAfterExit=yes
 StandardOutput=journal+console
 
