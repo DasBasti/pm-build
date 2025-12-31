@@ -1,9 +1,8 @@
 [Unit]
-Description=Resize userdata partition on first boot
+Description=Resize userdata partition if unallocated space exists
 DefaultDependencies=no
 After=systemd-udev-settle.service local-fs-pre.target
 Before=local-fs.target
-ConditionPathExists=!/var/lib/resize-userdata-done
 
 [Service]
 Type=oneshot

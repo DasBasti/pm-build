@@ -1,15 +1,8 @@
 #!/bin/bash
 # Resize userdata partition to use remaining disk space
+# This script auto-detects if resize is needed by checking for unallocated space
 
 set -e
-
-MARKER_FILE="/home/.resize-userdata-done"
-
-# Exit if already resized
-if [ -f "$MARKER_FILE" ]; then
-    echo "User data partition already resized"
-    exit 0
-fi
 
 # Find the userdata partition by label (more reliable than mount point)
 # Wait up to 10 seconds for the partition label to appear
@@ -48,12 +41,29 @@ fi
 
 echo "Device: $DEVICE"
 echo "Partition number: $PARTNUM"
-echo "Resizing partition $PARTNUM on $DEVICE..."
 
 # Fix GPT backup header if needed (move to end of disk)
 sgdisk --move-second-header "$DEVICE" 2>/dev/null || true
 
-# Resize partition using parted (answer yes to prompts)
+# Get current partition end and disk size in sectors
+PART_END=$(partx -g -o END -n "$PARTNUM" "$DEVICE" | tr -d ' ')
+DISK_SECTORS=$(blockdev --getsz "$DEVICE")
+# Leave 34 sectors for GPT backup header
+MAX_END=$((DISK_SECTORS - 34))
+
+echo "Partition end: $PART_END sectors"
+echo "Disk usable end: $MAX_END sectors"
+
+# Check if there's significant space to gain (at least 1MB = 2048 sectors)
+SPACE_AVAILABLE=$((MAX_END - PART_END))
+if [ "$SPACE_AVAILABLE" -lt 2048 ]; then
+    echo "Partition already uses available space (only $SPACE_AVAILABLE sectors free). Nothing to do."
+    exit 0
+fi
+
+echo "Found $((SPACE_AVAILABLE / 2048)) MB of unallocated space. Resizing partition..."
+
+# Resize partition using parted
 echo "Yes" | parted -s "$DEVICE" ---pretend-input-tty resizepart "$PARTNUM" 100% 2>&1 || {
     echo "Warning: parted returned non-zero, but this might be expected"
 }
@@ -63,9 +73,5 @@ sleep 2
 
 # Resize filesystem
 resize2fs "$USERDATA_PART"
-
-# Create marker file
-mkdir -p /var/lib
-touch "$MARKER_FILE"
 
 echo "User data partition successfully resized to $(df -h /home | tail -1 | awk '{print $2}')"
