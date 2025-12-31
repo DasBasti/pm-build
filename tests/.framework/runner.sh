@@ -4,6 +4,8 @@ source "$SCRIPT_DIR/.framework/colors.sh"
 source "$SCRIPT_DIR/.framework/log.sh"
 source "$SCRIPT_DIR/.framework/tests.sh"
 source "$SCRIPT_DIR/.framework/serial.sh"
+source "$SCRIPT_DIR/.framework/ssh.sh"
+source "$SCRIPT_DIR/.framework/device.sh"
 
 test_runner() {
 # Display banner

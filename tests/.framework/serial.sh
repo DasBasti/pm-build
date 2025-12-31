@@ -56,7 +56,7 @@ serial_send_and_capture() {
 serial_send_and_expect() {
     local command="$1"
     local expected="$2"
-    local timeout="${3:-2}"
+    local timeout="${3:-${SERIAL_TIMEOUT}}"
 
     # Get response
     local response=$(serial_send_and_capture "$command" "$timeout")

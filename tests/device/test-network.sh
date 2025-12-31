@@ -1,7 +1,6 @@
 #!/bin/false
 
-DEVICE_HOST="thebrutzlerv2.local"
-SSH_CMD="ssh -n -o ConnectTimeout=5 -o StrictHostKeyChecking=no root@${DEVICE_HOST}"
+# Note: Uses ssh_cmd from .framework/ssh.sh
 
 # =============================================================================
 # Basic Network Interface Tests (via Serial - no network dependency)
@@ -59,7 +58,7 @@ test_gateway_reachable() {
     expect "default gateway to be reachable via ping"
 
     # Get default gateway
-    gateway=$($SSH_CMD "ip route | awk '/default/ {print \$3}'") || {
+    gateway=$(ssh_cmd "ip route | awk '/default/ {print \$3}'") || {
         log_error "Failed to get default gateway"
         fail
     }
@@ -68,7 +67,7 @@ test_gateway_reachable() {
     log_info "Default gateway: $gateway"
 
     # Ping gateway (3 packets, 2 second timeout)
-    $SSH_CMD "ping -c 3 -W 2 $gateway >/dev/null 2>&1" || {
+    ssh_cmd "ping -c 3 -W 2 $gateway >/dev/null 2>&1" || {
         log_error "Cannot ping gateway $gateway"
         fail
     }
@@ -81,9 +80,9 @@ test_dns_resolution() {
     expect "DNS resolution to work"
 
     # Try to resolve a well-known hostname
-    resolved_ip=$($SSH_CMD "nslookup google.com 2>/dev/null | awk '/^Address/ && !/127.0.0/ {print \$2; exit}'") || {
+    resolved_ip=$(ssh_cmd "nslookup google.com 2>/dev/null | awk '/^Address/ && !/127.0.0/ {print \$2; exit}'") || {
         # Fallback: try getent if nslookup not available
-        resolved_ip=$($SSH_CMD "getent hosts google.com 2>/dev/null | awk '{print \$1; exit}'") || {
+        resolved_ip=$(ssh_cmd "getent hosts google.com 2>/dev/null | awk '{print \$1; exit}'") || {
             log_error "DNS resolution failed - neither nslookup nor getent available or working"
             fail
         }
@@ -102,9 +101,9 @@ test_internet_connectivity() {
     expect "internet connectivity to an external host"
 
     # Ping a reliable external host (Cloudflare DNS)
-    $SSH_CMD "ping -c 3 -W 3 1.1.1.1 >/dev/null 2>&1" || {
+    ssh_cmd "ping -c 3 -W 3 1.1.1.1 >/dev/null 2>&1" || {
         # Fallback to Google DNS
-        $SSH_CMD "ping -c 3 -W 3 8.8.8.8 >/dev/null 2>&1" || {
+        ssh_cmd "ping -c 3 -W 3 8.8.8.8 >/dev/null 2>&1" || {
             log_error "Cannot reach external hosts (1.1.1.1 or 8.8.8.8)"
             fail
         }
@@ -118,7 +117,7 @@ test_network_latency() {
     expect "network latency to gateway to be reasonable (< 100ms average)"
 
     # Get default gateway
-    gateway=$($SSH_CMD "ip route | awk '/default/ {print \$3}'") || {
+    gateway=$(ssh_cmd "ip route | awk '/default/ {print \$3}'") || {
         log_error "Failed to get default gateway"
         fail
     }
@@ -126,7 +125,7 @@ test_network_latency() {
     [ -z "$gateway" ] && { log_error "No default gateway configured"; fail; }
 
     # Ping gateway and extract average latency (BusyBox compatible)
-    ping_output=$($SSH_CMD "ping -c 5 -W 2 $gateway 2>&1") || {
+    ping_output=$(ssh_cmd "ping -c 5 -W 2 $gateway 2>&1") || {
         log_error "Ping to gateway failed"
         fail
     }
@@ -166,7 +165,7 @@ test_iperf_via_wifi() {
 
     # 1. Check if wlan0 has an IP (network connection is established)
     # Use awk instead of grep -P for BusyBox compatibility
-    wlan_ip=$($SSH_CMD "ip -4 addr show wlan0 2>/dev/null | awk '/inet / {split(\$2,a,\"/\"); print a[1]}'") || {
+    wlan_ip=$(ssh_cmd "ip -4 addr show wlan0 2>/dev/null | awk '/inet / {split(\$2,a,\"/\"); print a[1]}'") || {
         log_error "Failed to get wlan0 IP from device - WiFi not connected?"
         fail
     }
@@ -174,7 +173,7 @@ test_iperf_via_wifi() {
     log_info "Device wlan0 IP: $wlan_ip"
 
     # 2. Check if iperf3 is installed on the device and the host
-    $SSH_CMD "command -v iperf3 >/dev/null" || { log_error "iperf3 not installed on device"; fail; }
+    ssh_cmd "command -v iperf3 >/dev/null" || { log_error "iperf3 not installed on device"; fail; }
     command -v iperf3 >/dev/null || { log_error "iperf3 not installed on host"; fail; }
 
     # 3. Get the host IP that can reach the device (use awk for portability)
@@ -197,7 +196,7 @@ test_iperf_via_wifi() {
 
     # 5. Run iperf3 client on device connecting to host
     log_info "Running iperf3 client on device..."
-    iperf_output=$($SSH_CMD "iperf3 -c $host_ip -t 5 -J" 2>&1) || {
+    iperf_output=$(ssh_cmd "iperf3 -c $host_ip -t 5 -J" 2>&1) || {
         log_error "iperf3 client failed on device"
         cleanup
         fail

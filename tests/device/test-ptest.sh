@@ -8,28 +8,20 @@ run_single_ptest() {
 
     log_info "Running ptest: $testname"
 
-    # Start background serial reading
-    serial_start_reading
+    # Run ptest via SSH and capture output
+    local output
+    output=$(ssh_cmd "ptest-runner $testname" 2>&1) || true
 
-    # Send the ptest command
-    echo "ptest-runner $testname" > "$SERIAL"
-
-    # Process output line by line
+    # Check for test result indicators
     local has_result=false
     local has_fail=false
 
-    while serial_read_line 60; do
-        # Check for test result indicators
-        if echo "$SERIAL_LINE" | grep -qE "(PASS|FAIL|SKIP)"; then
-            has_result=true
-            if echo "$SERIAL_LINE" | grep -q "FAIL"; then
-                has_fail=true
-            fi
+    if echo "$output" | grep -qE "(PASS|FAIL|SKIP)"; then
+        has_result=true
+        if echo "$output" | grep -q "FAIL"; then
+            has_fail=true
         fi
-    done
-
-    # Stop reading and clean up
-    serial_stop_reading
+    fi
 
     # Classify test result and return status
     if [ "$has_result" = true ]; then
@@ -49,12 +41,14 @@ run_single_ptest() {
 test_ptest_is_installed() {
     expect "ptest to be installed"
 
-    # Configure serial port
-    serial_configure || fail
-
     # Check if ptest-runner is installed and responds
-    if ! serial_send_and_expect "ptest-runner -h" "Usage: ptest-runner" 2; then
-        log_error "ptest-runner not found or not responding correctly"
+    response=$(ssh_cmd "ptest-runner -h" 2>&1) || {
+        log_error "ptest-runner not found or SSH connection failed"
+        fail
+    }
+
+    if ! echo "$response" | grep -q "Usage: ptest-runner"; then
+        log_error "ptest-runner not responding correctly"
         fail
     fi
 
@@ -64,12 +58,14 @@ test_ptest_is_installed() {
 test_get_ptest_list() {
     expect "ptest to list available tests"
 
-    # Configure serial port
-    serial_configure || fail
-
     # Check if ptest-runner can list tests
-    if ! serial_send_and_expect "ptest-runner -l" "Available ptests:" 2; then
+    response=$(ssh_cmd "ptest-runner -l" 2>&1) || {
         log_error "ptest-runner failed to list available tests"
+        fail
+    }
+
+    if ! echo "$response" | grep -q "Available ptests:"; then
+        log_error "ptest-runner output missing expected header"
         fail
     fi
 
@@ -79,18 +75,12 @@ test_get_ptest_list() {
 test_parse_and_run_ptests() {
     expect "to parse ptest list and run tests individually"
 
-    # Configure serial port
-    serial_configure || fail
-
-    # become root
-    if ! serial_send_and_expect "su" "root@" 2; then
-        log_error "failed to become root"
-        fail
-    fi
-
     # Get the list of available ptests
-    # Note: We still need to capture the response to parse test names
-    response=$(serial_send_and_capture "ptest-runner -l" 5)
+    response=$(ssh_cmd "ptest-runner -l" 2>&1) || {
+        log_error "Failed to get ptest list"
+        fail
+    }
+
     if ! echo "$response" | grep -q "Available ptests:"; then
         log_error "Failed to get ptest list"
         fail
@@ -107,8 +97,6 @@ test_parse_and_run_ptests() {
         [[ -z "$line" ]] && continue
         [[ "$line" =~ "Available ptests:" ]] && continue
         [[ "$line" =~ "ptest-runner" ]] && continue
-        [[ "$line" =~ "$USER_NAME" ]] && continue
-
 
         # Extract test name (first column)
         testname=$(echo "$line" | awk '{print $1}')
