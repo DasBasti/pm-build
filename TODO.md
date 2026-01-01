@@ -85,9 +85,10 @@
   - [x] Have uboot boot fitImage A or B from the boot partition (extlinux labels created)
   - [x] update swupdate sw-descriptions to support switching to the image that got target. (in-progress)
 - [ ] Updates work
-  - [ ] a/b image mechanism works as expected. bootflow cannot see mmcblk0p10 as boot target even with image on it
-  - [ ] test full update file
-  - [ ] use links in fullupdate file to have only one bootloader block
+  - [x] a/b image mechanism works as expected. bootflow cannot see mmcblk0p10 as boot target even with image on it
+  - [x] test full update file
+  - [ ] use links in fullupdate file to have only one images block
+  - [ ] only update bootloader if it differs
   - [ ] think about location for copy version detection for A/B image (info should be part of bsp, script part of distro)
   - [ ] restart after update does not work as expected
 - [ ] Rescue to start once we hit 3 failed start attempts and fallback did not work

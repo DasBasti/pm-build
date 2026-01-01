@@ -1,0 +1,35 @@
+From bf2d83a008027d1a78db106ed548cf75cdb8df59 Mon Sep 17 00:00:00 2001
+From: =?UTF-8?q?Andreas=20M=C3=BCller?= <schnitzeltony@gmail.com>
+Date: Sun, 25 Oct 2020 18:13:58 +0100
+Subject: [PATCH] Do not split binaries during install
+MIME-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
+
+Upstream-Status: Inappropriate [oe specific]
+
+Signed-off-by: Andreas Müller <schnitzeltony@gmail.com>
+----
+ ports.mk | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
+---
+ ports.mk | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
+
+diff --git a/ports.mk b/ports.mk
+index 843d787bbcd..f3edd454196 100644
+--- a/ports.mk
++++ b/ports.mk
+@@ -35,10 +35,10 @@ endif
+
+ install-strip: $(EXECUTABLE) $(PLUGINS) install-data
+ 	$(INSTALL) -d "$(DESTDIR)$(bindir)"
+-	$(INSTALL) -c -s -m 755 "./$(EXECUTABLE)" "$(DESTDIR)$(bindir)/$(EXECUTABLE)"
++	$(INSTALL) -c -m 755 "./$(EXECUTABLE)" "$(DESTDIR)$(bindir)/$(EXECUTABLE)"
+ ifdef DYNAMIC_MODULES
+ 	$(INSTALL) -d "$(DESTDIR)$(libdir)/scummvm/"
+-	$(INSTALL) -c -s -m 644 $(PLUGINS) "$(DESTDIR)$(libdir)/scummvm/"
++	$(INSTALL) -c -m 644 $(PLUGINS) "$(DESTDIR)$(libdir)/scummvm/"
+ endif
+
+ uninstall:

@@ -16,7 +16,7 @@ SWUPDATE_IMAGES_FSTYPES[brutzelboy] = ".rootfs.ext4"
 
 # Enable RSA signing of SWUpdate packages with development key
 SWUPDATE_SIGNING = "RSA"
-SWUPDATE_PRIVATE_KEY = "${THISDIR}/../../recipes-support/swupdate-key/files/swupdate-development-key.pem"
+SWUPDATE_PRIVATE_KEY = "${THISDIR}/../../../meta-platinenmacher/recipes-support/swupdate-key/files/swupdate-development-key.pem"
 
 SRC_URI = "\
     file://sw-description \

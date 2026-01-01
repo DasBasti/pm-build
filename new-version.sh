@@ -61,7 +61,7 @@ sed -i -E '0,/^[[:space:]]*DISTRO_VERSION[[:space:]]*=/{s/^[[:space:]]*(DISTRO_V
 echo "Updated $CONF"
 
 # Replace the PV value in meta-platinenmacher/recipes-images/images/brutzelboy.inc
-INC_FILE="meta-platinenmacher/recipes-images/images/brutzelboy.inc"
+INC_FILE="meta-brutzelboy/recipes-images/images/brutzelboy.inc"
 
 if [[ ! -f "$INC_FILE" ]]; then
     echo "Error: $INC_FILE not found" >&2

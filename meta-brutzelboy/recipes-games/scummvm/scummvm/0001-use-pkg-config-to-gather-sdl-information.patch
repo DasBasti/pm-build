@@ -1,0 +1,37 @@
+From edb54e518f864487aa3091a3e8e3b50d9062f87f Mon Sep 17 00:00:00 2001
+From: =?UTF-8?q?Andreas=20M=C3=BCller?= <schnitzeltony@gmail.com>
+Date: Sun, 25 Oct 2020 17:47:51 +0100
+Subject: [PATCH] use pkg-config to gather sdl information
+MIME-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
+
+Upstream-Status: Inappropriate [oe specific]
+
+Signed-off-by: Andreas Müller <schnitzeltony@gmail.com>
+---
+ configure | 7 +++----
+ 1 file changed, 3 insertions(+), 4 deletions(-)
+
+diff --git a/configure b/configure
+index a9b2525d782..e4368ff8fe5 100755
+--- a/configure
++++ b/configure
+@@ -4177,14 +4177,13 @@ fi
+ # Setup SDL specifics for SDL based backends
+ #
+ if test "$_sdl" = auto ; then
+-	find_sdlconfig
+-	append_var SDL_CFLAGS "`$_sdlconfig --cflags | sed 's/[[:space:]]*-Dmain=SDL_main//g'`"
++	append_var SDL_CFLAGS "`pkg-config --cflags sdl2`"
+ 	if test "$_static_build" = yes ; then
+ 		append_var SDL_LIBS "`$_sdlconfig --static-libs`"
+ 	else
+-		append_var SDL_LIBS "`$_sdlconfig --libs`"
++		append_var SDL_LIBS "`pkg-config --libs sdl2`"
+ 	fi
+-	_sdlversion=`$_sdlconfig --version`
++	_sdlversion=`pkg-config --modversion sdl2`
+
+ 	echocheck "SDL"
+ 	_sdl=no
