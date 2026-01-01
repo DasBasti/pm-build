@@ -14,7 +14,7 @@ IMAGE_INSTALL:append = " \
     thebrutzler-user \
     openssh \
     usb-automount \
-    packagegroup-benchmark \
+    sudo \
 "
 
 # Network connection manager
@@ -34,12 +34,43 @@ IMAGE_INSTALL:append = " \
     swupdate-config \
 "
 
+# Brutzelboy stuff
+IMAGE_INSTALL:append = " \
+    scummvm \
+"
+
 # Generate ext4 image for swupdate packages
 IMAGE_FSTYPES += "ext4 wic.zip"
 
 # Use custom WKS file for A/B partitioning
 WKS_FILE = "platinenmacher-ab.wks"
 
-# This image depends on the actual rootfs image
-#IMAGE_DEPENDS = "brutzelboy-initramfs"
-#INITRAMFS_IMAGE = "brutzelboy-initramfs"
+
+# SWUpdate artifacts configuration for /etc/sw-versions
+# Maps artifact names to their deploy paths
+SWUPDATE_ARTIFACTS = "idbloader.img u-boot.itb"
+
+# Create /etc/sw-versions with artifact names and SHA256 hashes
+# Note: The rootfs uses the distro version since we cannot include the hash
+# of the ext4 image inside the image itself
+generate_sw_versions() {
+    SW_VERSIONS_FILE="${IMAGE_ROOTFS}${sysconfdir}/sw-versions"
+    rm -f ${SW_VERSIONS_FILE}
+
+    # Add rootfs entry using distro version
+    echo "${PN} ${PV}" >> ${SW_VERSIONS_FILE}
+
+    # Add bootloader artifacts
+    for artifact in ${SWUPDATE_ARTIFACTS}; do
+        artifact_path="${DEPLOY_DIR_IMAGE}/${artifact}"
+        if [ -f "${artifact_path}" ]; then
+            hash=$(sha256sum "${artifact_path}" | awk '{print $1}')
+            echo "${artifact} ${hash}" >> ${SW_VERSIONS_FILE}
+        else
+            bbwarn "SWUpdate artifact not found: ${artifact_path}"
+        fi
+    done
+}
+
+ROOTFS_POSTPROCESS_COMMAND += "generate_sw_versions;"
+do_rootfs[depends] += "virtual/bootloader:do_deploy"
