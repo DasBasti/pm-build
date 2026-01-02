@@ -4,7 +4,7 @@ SRC_URI += "\
     file://home.mount \
     file://migrate-home.sh \
     file://migrate-home.service \
-    file://motd \
+    file://platinenmacher-motd \
 "
 
 inherit systemd
@@ -21,6 +21,8 @@ do_install:append() {
 
     install -d ${D}${sbindir}
     install -m 0755 ${UNPACKDIR}/migrate-home.sh ${D}${sbindir}/
+
+    install -m 0644 ${S}/platinenmacher-motd ${D}${sysconfdir}/motd
 }
 
 FILES:${PN} += "\
