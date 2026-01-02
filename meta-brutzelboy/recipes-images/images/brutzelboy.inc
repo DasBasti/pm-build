@@ -18,6 +18,7 @@ IMAGE_INSTALL:append = " \
     weston \
     weston-init \
     xdg-user-dirs \
+    xcursor-themes \
 "
 
 # Network connection manager
