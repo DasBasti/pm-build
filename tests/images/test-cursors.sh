@@ -24,7 +24,13 @@ test_cursor_theme_installed() {
         fail
     fi
 
-    sudo umount "${tmpmnt}" || true
+    # Best-effort cleanup: prefer regular unmount, fall back to lazy unmount and detach loop device
+    if mountpoint -q "${tmpmnt}" ; then
+        sudo umount "${tmpmnt}" || sudo umount -l "${tmpmnt}" || true
+    fi
+    # Detach loop device if one was associated with the file
+    loopdev=$(losetup -j "${rootfs}" 2>/dev/null | cut -d: -f1)
+    [ -n "${loopdev}" ] && sudo losetup -d "${loopdev}" || true
     rm -rf "${tmpmnt}"
 
     pass
