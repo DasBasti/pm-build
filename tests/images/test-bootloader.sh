@@ -59,16 +59,34 @@ test_uboot_environment_variables() {
         # Skip if key is empty after trimming
         [ -z "$key" ] && continue
 
+        # Remove surrounding single/double quotes from the value (they may be present in the .env file but not in the stored env)
+        local orig_value="$value"
+        value=$(printf '%s' "$value" | sed -e "s/^['\"]//" -e "s/['\"]$//")
+
         # Search for the key=value pair in the hex dump
         # The environment is stored as null-terminated strings, so we look for the ASCII representation
         # Format in hexdump: key=value\x00
         local search_pattern="${key}=${value}"
 
-        if ! grep -q "$search_pattern" "$env_dump"; then
-            log_error "Missing or incorrect u-boot environment variable: $key=$value"
-            failed=1
+        # Try direct fixed-string match first
+        if grep -F -q -- "$search_pattern" "$env_dump"; then
+            log_info "✓ Found: $key=$orig_value"
         else
-            log_info "✓ Found: $key=$value"
+            # Fallback: strip single/double quotes from both the pattern and the dump and try again
+            local search_pattern_nq="$(printf '%s' "$search_pattern" | tr -d "'\"")"
+            local env_dump_nq
+            env_dump_nq=$(mktemp)
+            tr -d "'\"" < "$env_dump" > "$env_dump_nq"
+
+            if grep -F -q -- "$search_pattern_nq" "$env_dump_nq"; then
+                log_info "✓ Found (after stripping quotes): $key=$orig_value"
+                rm -f "$env_dump_nq"
+            else
+                log_error "Missing or incorrect u-boot environment variable: $key=$orig_value"
+                cat "$env_dump"
+                rm -f "$env_dump_nq"
+                failed=1
+            fi
         fi
     done < "$uboot_env_file"
 
