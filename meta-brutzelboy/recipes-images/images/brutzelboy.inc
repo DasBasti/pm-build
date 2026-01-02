@@ -42,6 +42,7 @@ IMAGE_INSTALL:append = " \
 IMAGE_INSTALL:append = " \
     scummvm \
     scummvm-autostart \
+    scummvm \
 "
 
 # Generate ext4 image for swupdate packages
