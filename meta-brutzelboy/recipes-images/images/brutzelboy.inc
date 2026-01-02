@@ -41,6 +41,7 @@ IMAGE_INSTALL:append = " \
 # Brutzelboy stuff
 IMAGE_INSTALL:append = " \
     scummvm \
+    scummvm-autostart \
 "
 
 # Generate ext4 image for swupdate packages
