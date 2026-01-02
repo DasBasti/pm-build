@@ -11,12 +11,13 @@ IMAGE_INSTALL:append = " \
     parted \
     e2fsprogs-resize2fs \
     persist-config \
-    thebrutzler-user \
     openssh \
     usb-automount \
     sudo \
     wayland \
     weston \
+    weston-init \
+    xdg-user-dirs \
 "
 
 # Network connection manager

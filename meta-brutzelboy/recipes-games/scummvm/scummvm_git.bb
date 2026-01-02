@@ -60,4 +60,13 @@ do_configure() {
         sed -i "s/RANLIB := ranlib/RANLIB := ${RANLIB}/" ${S}/config.mk
 }
 
+PACKAGES:prepend = "${PN}-autostart "
 FILES:${PN} += "${datadir}"
+
+do_install:append(){
+    install -D ${UNPACKDIR}/scummvm.desktop ${D}${sysconfdir}/xdg/autostart/scummvm.desktop
+}
+
+FILES:${PN}-autostart = "\
+    ${sysconfdir}/xdg/autostart/scummvm.desktop \
+"

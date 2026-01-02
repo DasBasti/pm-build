@@ -209,7 +209,7 @@ do_restore() {
         else
             # For file patterns, restore files to target directory
             cp -a "$backup_dir" "$target_dir/" 2>/dev/null || true
-            echo "copy file $(basnename $backup_dir) to $target_dir/"
+            echo "copy file $(basename $backup_dir) to $target_dir/"
         fi
 
         # Update hash to match restored state so daemon doesn't overwrite
