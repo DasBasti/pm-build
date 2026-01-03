@@ -603,7 +603,7 @@
 		interrupt-names = "host-wake";
 		pinctrl-names = "default";
 		pinctrl-0 = <&wifi_host_wake_h>;
-		/*brcm,board-type = "AP6212";*/
+		brcm,board-type = "AP6212";
 	};
 };
 
