@@ -13,7 +13,7 @@
 **/build/tmp
 **/build/sstate-cache
 **/build/cache
-**/build/*.log
+**/*.log
 
 #Ignore any buildtools downloads
 **/buildtools/
