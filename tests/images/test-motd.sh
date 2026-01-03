@@ -1,9 +1,5 @@
 #!/bin/false
 
-# Use mount helper to inspect ext4 rootfs images
-source "$SCRIPT_DIR/.framework/mount_image.sh"
-
-
 test_motd_exists_in_rootfs() {
     expect "rootfs images to contain /etc/motd with welcome message"
 

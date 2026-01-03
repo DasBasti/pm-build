@@ -1,0 +1,26 @@
+#!/usr/bin/plymouth
+# Minimal plymouth "script" theme that displays splash.png centered on screen.
+# This uses the plymouth script API; keep it small and tolerant of failures.
+
+def _center(widget):
+    try:
+        sw = Window().GetScreenWidth()
+        sh = Window().GetScreenHeight()
+        w = widget.GetWidth()
+        h = widget.GetHeight()
+        widget.SetPosition((int((sw - w) / 2), int((sh - h) / 2)))
+    except Exception:
+        pass
+
+def start():
+    try:
+        win = Window()
+        img = Image("splash.png")
+        _center(img)
+        win.AddWidget(img)
+        win.Show()
+    except Exception:
+        pass
+
+def stop():
+    pass

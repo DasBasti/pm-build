@@ -1,0 +1,6 @@
+[Plymouth Theme]
+Name=Platinenmacher
+Description=Platinenmacher static image theme
+ModuleName=script
+ScriptFile=platinenmacher.script
+ImageDir=/usr/share/plymouth/themes/platinenmacher

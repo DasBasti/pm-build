@@ -6,6 +6,7 @@ source "$SCRIPT_DIR/.framework/tests.sh"
 source "$SCRIPT_DIR/.framework/serial.sh"
 source "$SCRIPT_DIR/.framework/ssh.sh"
 source "$SCRIPT_DIR/.framework/device.sh"
+source "$SCRIPT_DIR/.framework/mount_image.sh"
 
 test_runner() {
 # Display banner

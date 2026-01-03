@@ -19,6 +19,7 @@ IMAGE_INSTALL:append = " \
     weston-init \
     xdg-user-dirs \
     xcursor-themes \
+    plymouth \
 "
 
 # Network connection manager
@@ -41,6 +42,14 @@ IMAGE_INSTALL:append = " \
 # Brutzelboy stuff
 IMAGE_INSTALL:append = " \
     scummvm \
+    libgl-mesa \
+    libegl-mesa \
+    libgbm \
+    mesa-megadriver \
+"
+
+IMAGE_FEATURES:append = " \
+    splash \
 "
 
 # Generate ext4 image for swupdate packages

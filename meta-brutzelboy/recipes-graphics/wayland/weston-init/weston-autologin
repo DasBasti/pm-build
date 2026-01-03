@@ -1,0 +1,11 @@
+# PAM configuration for Weston auto-login
+# Ensures systemd-logind creates a user runtime dir and session
+
+auth     required pam_unix.so
+account  required pam_unix.so
+session  required pam_env.so
+session  required pam_unix.so
+# Create a systemd user session for Weston so XDG_RUNTIME_DIR is available
+session  optional pam_systemd.so type=wayland class=user desktop=weston
+# Ensure loginuid is set
+session  optional pam_loginuid.so

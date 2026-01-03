@@ -6,6 +6,7 @@ LIC_FILES_CHKSUM = "file://${COMMON_LICENSE_DIR}/MIT;md5=0835ade698e0bcf8506ecda
 SRC_URI = "\
     file://swupdate.cfg \
     file://detect-rootfs.sh \
+    file://post-update.sh \
     file://00-detect-rootfs \
     file://01-signing \
     file://fw-mark-boot-good.sh \
@@ -29,6 +30,7 @@ do_install() {
     install -d ${D}${libexecdir}
     install -m 0755 ${UNPACKDIR}/detect-rootfs.sh ${D}${libexecdir}/swupdate-detect-rootfs
     install -m 0755 ${S}/fw-mark-boot-good.sh ${D}${libexecdir}/fw-mark-boot-good.sh
+    install -m 0755 ${S}/post-update.sh ${D}${libexecdir}/post-update.sh
 
     install -d ${D}${libdir}/swupdate/conf.d/
     install -m 0755 ${UNPACKDIR}/00-detect-rootfs ${D}${libdir}/swupdate/conf.d/00-detect-rootfs
@@ -42,6 +44,7 @@ FILES:${PN} = "\
     ${sysconfdir}/swupdate/swupdate.cfg \
     ${libexecdir}/swupdate-detect-rootfs \
     ${libexecdir}/fw-mark-boot-good.sh \
+    ${libexecdir}/post-update.sh \
     ${libdir}/swupdate/conf.d/00-detect-rootfs \
     ${libdir}/swupdate/conf.d/01-signing \
     ${systemd_system_unitdir}/fw-mark-boot-good.service \
