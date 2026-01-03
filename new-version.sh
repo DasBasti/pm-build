@@ -76,3 +76,7 @@ echo "Updated $INC_FILE"
 # Show the modified line for verification
 grep -E "^\s*DISTRO_VERSION\s*=" "$CONF" || true
 grep -E "^\s*PV\s*=" "$INC_FILE" || true
+
+git add "$CONF" "$INC_FILE"
+git commit -m "Version bump: ${year}.${month}.${patch}"
+git tag "${year}.${month}.${patch}" -m "${year}.${month}.${patch}"
