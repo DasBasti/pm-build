@@ -1,26 +1,23 @@
-#!/usr/bin/plymouth
-# Minimal plymouth "script" theme that displays splash.png centered on screen.
-# This uses the plymouth script API; keep it small and tolerant of failures.
+# Platinenmacher Plymouth script theme
+# Displays splash.png centered on screen
 
-def _center(widget):
-    try:
-        sw = Window().GetScreenWidth()
-        sh = Window().GetScreenHeight()
-        w = widget.GetWidth()
-        h = widget.GetHeight()
-        widget.SetPosition((int((sw - w) / 2), int((sh - h) / 2)))
-    except Exception:
-        pass
+# Set background color (dark)
+Window.SetBackgroundTopColor(0.1, 0.1, 0.1);
+Window.SetBackgroundBottomColor(0.05, 0.05, 0.05);
 
-def start():
-    try:
-        win = Window()
-        img = Image("splash.png")
-        _center(img)
-        win.AddWidget(img)
-        win.Show()
-    except Exception:
-        pass
+# Load and display the splash image centered
+splash_image = Image("splash.png");
+splash_sprite = Sprite(splash_image);
 
-def stop():
-    pass
+# Center the image on screen
+splash_sprite.SetX(Window.GetX() + Window.GetWidth() / 2 - splash_image.GetWidth() / 2);
+splash_sprite.SetY(Window.GetY() + Window.GetHeight() / 2 - splash_image.GetHeight() / 2);
+
+# Re-center on refresh in case resolution changes
+fun refresh_callback()
+{
+    splash_sprite.SetX(Window.GetX() + Window.GetWidth() / 2 - splash_image.GetWidth() / 2);
+    splash_sprite.SetY(Window.GetY() + Window.GetHeight() / 2 - splash_image.GetHeight() / 2);
+}
+
+Plymouth.SetRefreshFunction(refresh_callback);
