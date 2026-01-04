@@ -2,5 +2,7 @@
 Name=Platinenmacher
 Description=Platinenmacher static image theme
 ModuleName=script
-ScriptFile=platinenmacher.script
+
+[script]
 ImageDir=/usr/share/plymouth/themes/platinenmacher
+ScriptFile=/usr/share/plymouth/themes/platinenmacher/platinenmacher.script
