@@ -7,6 +7,7 @@ FILESEXTRAPATHS:prepend := "${THISDIR}/${PN}:"
 SRC_URI:append = " \
     file://override.conf \
     file://weston.ini \
+    file://weston.env \
     file://weston-autologin \
     file://thebrutzler-sudoers \
 "
@@ -19,15 +20,18 @@ FILESEXTRAPATHS := "${THISDIR}/files:${FILESEXTRAPATHS}"
 RDEPENDS:${PN} += "sudo"
 
 # Create thebrutzler user with all necessary groups
+# - seat: required for seatd access (DRM/input device management)
 USERADD_PACKAGES = "${PN}"
-USERADD_PARAM:${PN} = "-d ${WESTON_USER_HOME} -s /bin/bash -G sudo,wheel,audio,video,input,render,wayland ${WESTON_USER}"
+USERADD_PARAM:${PN} = "-d ${WESTON_USER_HOME} -s /bin/bash -G sudo,wheel,audio,video,input,render,wayland,seat ${WESTON_USER}"
 
 # Package additional files (we generate them in do_install to avoid SRC_URI file lookups)
 FILES:${PN} += "\
     ${datadir}/${PN}/thebrutzler-sudoers \
     ${sysconfdir}/pam.d/weston-autologin \
     ${systemd_unitdir}/system/weston.service.d/override.conf \
-    ${sysconfdir}/xdg/weston.ini \
+    ${sysconfdir}/xdg/weston/weston.ini \
+    ${sysconfdir}/default/weston \
+    ${localstatedir}/lib/systemd/linger/thebrutzler \
 "
 
 RDEPENDS:${PN} += "libpam-runtime"
@@ -46,8 +50,16 @@ do_install:append() {
     install -m 0644 ${UNPACKDIR}/override.conf ${D}${systemd_unitdir}/system/weston.service.d/override.conf
 
     # Install a system weston.ini to ensure a cursor theme is set
-    install -d ${D}${sysconfdir}/xdg
-    install -m 0644 ${UNPACKDIR}/weston.ini ${D}${sysconfdir}/xdg/weston.ini
+    install -d ${D}${sysconfdir}/xdg/weston
+    install -m 0644 ${UNPACKDIR}/weston.ini ${D}${sysconfdir}/xdg/weston/weston.ini
+
+    # Install weston environment file with XDG_RUNTIME_DIR set
+    install -d ${D}${sysconfdir}/default
+    install -m 0644 ${UNPACKDIR}/weston.env ${D}${sysconfdir}/default/weston
+
+    # Enable linger for thebrutzler user so XDG_RUNTIME_DIR is created at boot
+    install -d ${D}${localstatedir}/lib/systemd/linger
+    touch ${D}${localstatedir}/lib/systemd/linger/thebrutzler
 }
 
 pkg_postinst_ontarget:${PN}() {
