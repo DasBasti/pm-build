@@ -7,6 +7,8 @@ IMAGE_ROOTFS_EXTRA_SPACE:append = " ${@bb.utils.contains("DISTRO_FEATURES", "sys
 PV = "2026.01.4"
 
 IMAGE_INSTALL:append = " \
+    bluealsa \
+    alsa-utils \
     resize-userdata \
     parted \
     e2fsprogs-resize2fs \
