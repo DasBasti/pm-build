@@ -68,10 +68,10 @@ do_install:append(){
     install -D ${UNPACKDIR}/scummvm.desktop ${D}${sysconfdir}/xdg/autostart/scummvm.desktop
 
     # Convert SVG icon to PNG for weston launcher
-    install -d ${D}${datadir}/icons/hicolor/128x128/apps
-    rsvg-convert -w 128 -h 128 \
+    install -d ${D}${datadir}/icons/hicolor/32x32/apps
+    rsvg-convert -w 32 -h 32 \
         ${D}${datadir}/icons/hicolor/scalable/apps/org.scummvm.scummvm.svg \
-        -o ${D}${datadir}/icons/hicolor/128x128/apps/org.scummvm.scummvm.png
+        -o ${D}${datadir}/icons/hicolor/32x32/apps/org.scummvm.scummvm.png
 }
 
 FILES:${PN}-autostart = "\
