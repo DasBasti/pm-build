@@ -72,7 +72,7 @@
 - [x] add secondary rootfs partition
 - [x] create swupdate sw-description file
 - [x] create resize-userdata service for persistent /home
-- [ ] provide swupdate server
+- [ ] provide swupdate server (Get from Github)
 - [X] make swu installable
   - [x] make u-boot use the environment partition
   - [x] modifyable u-boot environment from userspace
@@ -91,6 +91,7 @@
   - [ ] only update bootloader if it differs
   - [ ] think about location for copy version detection for A/B image (info should be part of bsp, script part of distro)
   - [ ] restart after update does not work as expected
+  - [ ] pack ext4 image in swu to reduce image size
 - [ ] Rescue to start once we hit 3 failed start attempts and fallback did not work
   - [ ] include rescue in initramfs-image
   - [ ] ship initramfs-image for rescue as artifact in regualar image
@@ -102,12 +103,12 @@
 - [ ] validat that dtb and initramfs is loaded from fitImage
 
 ## Config persistence
-- [ ] Check save of config on reboot
-- [ ] remove wpa_supplicant form config list
+- [x] Check save of config on reboot
+- [x] remove wpa_supplicant form config list
 
 ## User
 - [x] Add user thebrutzler
-- [ ] Sudo not working for thebrutzler user
+- [x] Sudo not working for thebrutzler user
 
 ## GH Release
 - [x] upload an image to Github Release
