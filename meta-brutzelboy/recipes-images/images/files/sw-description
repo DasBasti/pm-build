@@ -8,10 +8,11 @@ software =
             copyA : {
                 images: (
                     {
-                        filename = "brutzelboy-thebrutzler_v2.rootfs.ext4";
+                        filename = "brutzelboy-thebrutzler_v2.rootfs.ext4.xz";
+                        compressed = "xz";
                         device = "/dev/disk/by-partlabel/rootfsB";
                         type = "raw";
-                        sha256 = "$swupdate_get_sha256(brutzelboy-thebrutzler_v2.rootfs.ext4)";
+                        sha256 = "$swupdate_get_sha256(brutzelboy-thebrutzler_v2.rootfs.ext4.xz)";
                         version = "@@DISTRO_VERSION@@";
                     },
                     {
@@ -49,10 +50,11 @@ software =
             copyB : {
                 images: (
                     {
-                        filename = "brutzelboy-thebrutzler_v2.rootfs.ext4";
+                        filename = "brutzelboy-thebrutzler_v2.rootfs.ext4.xz";
+                        compressed = "xz";
                         device = "/dev/disk/by-partlabel/rootfsA";
                         type = "raw";
-                        sha256 = "$swupdate_get_sha256(brutzelboy-thebrutzler_v2.rootfs.ext4)";
+                        sha256 = "$swupdate_get_sha256(brutzelboy-thebrutzler_v2.rootfs.ext4.xz)";
                         version = "@@DISTRO_VERSION@@";
                     },
                     {

@@ -12,7 +12,7 @@ IMAGE_DEPENDS = "brutzelboy virtual/bootloader"
 SWUPDATE_IMAGES = "brutzelboy idbloader.img u-boot.itb"
 
 # Specify the filesystem type to package
-SWUPDATE_IMAGES_FSTYPES[brutzelboy] = ".rootfs.ext4"
+SWUPDATE_IMAGES_FSTYPES[brutzelboy] = ".rootfs.ext4.xz"
 
 # Enable RSA signing of SWUpdate packages with development key
 SWUPDATE_SIGNING = "RSA"

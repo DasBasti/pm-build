@@ -20,6 +20,7 @@ IMAGE_INSTALL:append = " \
     xdg-user-dirs \
     xcursor-themes \
     plymouth \
+    xz \
 "
 
 # Network connection manager
@@ -54,7 +55,7 @@ IMAGE_FEATURES:append = " \
 "
 
 # Generate ext4 image for swupdate packages
-IMAGE_FSTYPES += "ext4 wic.zip"
+IMAGE_FSTYPES += "ext4 ext4.xz wic.zip"
 
 # Use custom WKS file for A/B partitioning
 WKS_FILE = "platinenmacher-ab.wks"
