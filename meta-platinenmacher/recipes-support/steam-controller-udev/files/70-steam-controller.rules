@@ -1,0 +1,19 @@
+# Steam Controller udev rules for Platinenmacher Linux
+# Enables access to Valve Steam Controller without Steam client
+# Supports both wired (1142) and wireless dongle (1102)
+
+# Valve USB devices - general access
+SUBSYSTEMS=="usb", ATTRS{idVendor}=="28de", MODE="0660", GROUP="input"
+
+# Steam Controller uinput write access (for virtual device creation)
+KERNEL=="uinput", SUBSYSTEM=="misc", MODE="0660", GROUP="input"
+
+# Steam Controller wired over USB hidraw
+KERNEL=="hidraw*", ATTRS{idVendor}=="28de", ATTRS{idProduct}=="1142", MODE="0660", GROUP="input"
+
+# Steam Controller wireless dongle over USB hidraw
+KERNEL=="hidraw*", ATTRS{idVendor}=="28de", ATTRS{idProduct}=="1102", MODE="0660", GROUP="input"
+
+# Tag Steam Controller as pointer device for libinput/Weston recognition
+SUBSYSTEM=="input", ATTRS{idVendor}=="28de", ATTRS{idProduct}=="1142", ENV{ID_INPUT_MOUSE}="1"
+SUBSYSTEM=="input", ATTRS{idVendor}=="28de", ATTRS{idProduct}=="1102", ENV{ID_INPUT_MOUSE}="1"

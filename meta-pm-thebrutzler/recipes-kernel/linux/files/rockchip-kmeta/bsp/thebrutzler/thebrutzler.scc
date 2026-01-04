@@ -2,3 +2,4 @@
 include cfg/iwd.scc
 include cfg/usb_hid.scc
 include cfg/usb_gadget.scc
+include cfg/steam_controller.scc

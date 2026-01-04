@@ -46,6 +46,7 @@ IMAGE_INSTALL:append = " \
     libegl-mesa \
     libgbm \
     mesa-megadriver \
+    steam-controller-udev \
 "
 
 IMAGE_FEATURES:append = " \
