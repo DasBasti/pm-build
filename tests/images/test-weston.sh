@@ -2,7 +2,8 @@
 
 
 test_weston_ini_in_rootfs() {
-    expect "that /etc/xdg/weston.ini exists and sets a cursor theme"
+    local ini_path="/etc/xdg/weston/weston.ini"
+    expect "that ${ini_path} exists and sets a cursor theme"
 
     rootfs=$(find $DEPLOY_DIR/images/$MACHINE/ -type f -name "*rootfs*.ext4" | head -n1)
     [ -n "${rootfs}" ] || { log_error "No rootfs.ext4 artifact found"; fail; }
@@ -14,14 +15,14 @@ test_weston_ini_in_rootfs() {
         fail
     fi
 
-    if [ ! -f "${tmpmnt}/etc/xdg/weston/weston.ini" ]; then
-        log_error "/etc/xdg/weston.ini missing in rootfs"
+    if [ ! -f "${tmpmnt}${ini_path}" ]; then
+        log_error "${ini_path} missing in rootfs"
         sudo umount "${tmpmnt}" || true
         rm -rf "${tmpmnt}"
         fail
     fi
 
-    grep -q "cursor-theme" "${tmpmnt}/etc/xdg/weston.ini" || { log_error "cursor-theme not set in weston.ini"; sudo umount "${tmpmnt}" || true; rm -rf "${tmpmnt}"; fail; }
+    grep -q "cursor-theme" "${tmpmnt}${ini_path}" || { log_error "cursor-theme not set in weston.ini"; sudo umount "${tmpmnt}" || true; rm -rf "${tmpmnt}"; fail; }
 
     sudo umount "${tmpmnt}" || true
     rm -rf "${tmpmnt}"
