@@ -29,3 +29,7 @@
 	path = bitbake-builds/poky-whinlatter/layers/meta-swupdate
 	url = https://github.com/sbabic/meta-swupdate
 	branch = whinlatter
+[submodule "bitbake-builds/poky-whinlatter/layers/meta-retro"]
+	path = bitbake-builds/poky-whinlatter/layers/meta-retro
+	url = https://github.com/DasBasti/meta-retro.git
+	branch = whinlatter
