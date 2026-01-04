@@ -37,6 +37,7 @@ DEPENDS = "\
     libmad \
     mpeg2dec \
     fluidsynth \
+    librsvg-native \
 "
 
 DISABLE_STATIC = ""
@@ -65,6 +66,12 @@ FILES:${PN} += "${datadir}"
 
 do_install:append(){
     install -D ${UNPACKDIR}/scummvm.desktop ${D}${sysconfdir}/xdg/autostart/scummvm.desktop
+
+    # Convert SVG icon to PNG for weston launcher
+    install -d ${D}${datadir}/icons/hicolor/128x128/apps
+    rsvg-convert -w 128 -h 128 \
+        ${D}${datadir}/icons/hicolor/scalable/apps/org.scummvm.scummvm.svg \
+        -o ${D}${datadir}/icons/hicolor/128x128/apps/org.scummvm.scummvm.png
 }
 
 FILES:${PN}-autostart = "\

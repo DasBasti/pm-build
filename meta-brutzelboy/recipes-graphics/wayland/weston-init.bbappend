@@ -10,6 +10,7 @@ SRC_URI:append = " \
     file://weston.env \
     file://weston-autologin \
     file://thebrutzler-sudoers \
+    file://background.png \
 "
 
 # Additional source files for thebrutzler user setup
@@ -27,6 +28,7 @@ USERADD_PARAM:${PN} = "-d ${WESTON_USER_HOME} -s /bin/bash -G sudo,wheel,audio,v
 # Package additional files (we generate them in do_install to avoid SRC_URI file lookups)
 FILES:${PN} += "\
     ${datadir}/${PN}/thebrutzler-sudoers \
+    ${datadir}/${PN}/background.png \
     ${sysconfdir}/pam.d/weston-autologin \
     ${systemd_unitdir}/system/weston.service.d/override.conf \
     ${sysconfdir}/xdg/weston/weston.ini \
@@ -40,6 +42,7 @@ do_install:append() {
     # Stage generated sudoers file for postinst
     install -d ${D}${datadir}/${PN}
     install -m 0440 ${UNPACKDIR}/thebrutzler-sudoers ${D}${datadir}/${PN}/
+    install -m 0644 ${UNPACKDIR}/background.png ${D}${datadir}/${PN}/
 
     # Install PAM file so systemd can create user session on service start
     install -d ${D}${sysconfdir}/pam.d
@@ -60,6 +63,7 @@ do_install:append() {
     # Enable linger for thebrutzler user so XDG_RUNTIME_DIR is created at boot
     install -d ${D}${localstatedir}/lib/systemd/linger
     touch ${D}${localstatedir}/lib/systemd/linger/thebrutzler
+
 }
 
 pkg_postinst_ontarget:${PN}() {
